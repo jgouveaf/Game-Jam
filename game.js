@@ -95,49 +95,60 @@ function runSplashSequence() {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if(audioCtx.state === 'suspended') audioCtx.resume();
         
-        // --- MÚSICA DE TRAMA (Dark Suspense Synth) --- //
+        // --- MÚSICA DE SUSPENSE MEDIEVAL (Estilo Castle Crashers) --- //
         const masterGain = audioCtx.createGain();
         masterGain.connect(audioCtx.destination);
-        masterGain.gain.value = 0.6;
+        masterGain.gain.value = 0.5;
 
-        // Pad Drone Cinematografico: Deep Bass (41Hz E1)
-        const drone = audioCtx.createOscillator();
-        const droneGain = audioCtx.createGain();
-        drone.type = 'sawtooth';
-        drone.frequency.value = 41.2; 
-        
-        // Lowpass filter para suavizar o sawtooth num som denso e imersivo (Hans Zimmer)
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 150;
-        
-        droneGain.gain.setValueAtTime(0, audioCtx.currentTime);
-        droneGain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 8); // swell lento de 8s
-        droneGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 16); // fade out para o menu
-
-        drone.connect(filter).connect(droneGain).connect(masterGain);
-        drone.start();
-        drone.stop(audioCtx.currentTime + 16);
-
-        // Suspense Tones (Ecoando na abertura)
-        function playPluck(freq, time, decay) {
+        // Bassline pesada (Pulse wave escuro)
+        function playBassRiff(timeOffsets) {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = freq;
-            gain.gain.setValueAtTime(0, audioCtx.currentTime + time);
-            gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + time + 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + time + decay);
-            osc.connect(gain).connect(masterGain);
-            osc.start(audioCtx.currentTime + time);
-            osc.stop(audioCtx.currentTime + time + decay);
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(65.41, audioCtx.currentTime + timeOffsets); // C2
+            osc.frequency.setValueAtTime(65.41, audioCtx.currentTime + timeOffsets + 0.4);
+            osc.frequency.setValueAtTime(77.78, audioCtx.currentTime + timeOffsets + 0.45); // Eb2
+            
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(300, audioCtx.currentTime + timeOffsets);
+            filter.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + timeOffsets + 1.5);
+            
+            gain.gain.setValueAtTime(0, audioCtx.currentTime + timeOffsets);
+            gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + timeOffsets + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + timeOffsets + 1.5);
+
+            osc.connect(filter).connect(gain).connect(masterGain);
+            osc.start(audioCtx.currentTime + timeOffsets);
+            osc.stop(audioCtx.currentTime + timeOffsets + 1.5);
         }
 
-        // Notas da trama (Tensão) crescendo no background escuro
-        playPluck(164.81, 1, 5);  // E3
-        playPluck(195.99, 4.5, 6); // G3
-        playPluck(246.94, 8, 7);  // B3
-        playPluck(233.08, 11, 8); // Bb3 (Tensão dissonante pro climax!)
+        // Arpejador rápido estilo masmorra de suspense
+        function playArp(noteIndex, time) {
+            const freqs = [261.63, 311.13, 392.00, 523.25]; // C4, Eb4, G4, C5 (C minor arpeggio)
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle'; // Tom de fantasia
+            osc.frequency.value = freqs[noteIndex % freqs.length];
+            gain.gain.setValueAtTime(0, audioCtx.currentTime + time);
+            gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + time + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + time + 0.15);
+            
+            osc.connect(gain).connect(masterGain);
+            osc.start(audioCtx.currentTime + time);
+            osc.stop(audioCtx.currentTime + time + 0.15);
+        }
+
+        // Loop da música de abertura (dura ~12 segundos)
+        for(let i = 0; i < 9; i++) {
+            // Bass toca a cada 1.5 segundos
+            playBassRiff(i * 1.5);
+            
+            // Arpejo toca notas 8 vezes por compasso (rápido!)
+            for(let j = 0; j < 8; j++) {
+                playArp(j, (i * 1.5) + (j * 0.1875)); 
+            }
+        }
     }, 100);
 
     // 1. Mostrar Godframe (Fade In lento no fundo escuro)
