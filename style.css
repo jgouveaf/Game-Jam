@@ -1,12 +1,11 @@
 :root {
-    --primary-neon: hsla(280, 100%, 60%, 1);
-    --secondary-neon: hsla(190, 100%, 50%, 1);
-    --background: hsla(240, 30%, 5%, 1);
-    --accent: hsla(0, 100%, 60%, 1);
-    --text-color: hsla(0, 0%, 100%, 0.9);
-    --glass-bg: hsla(240, 20%, 10%, 0.6);
-    --glass-border: hsla(0, 0%, 100%, 0.1);
-    --glass-shadow: 0 8px 32px 0 hsla(240, 30%, 0%, 0.7);
+    --comic-border: 4px solid #111;
+    --pre-bg: #e2d1b0;
+    --myth-bg: #f8f8f8;
+    --fut-bg: #0d0221;
+    --neon-pink: #ff00ff;
+    --neon-blue: #00f7ff;
+    --golden: #ffd700;
 }
 
 * {
@@ -14,191 +13,436 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Outfit', sans-serif;
-    user-select: none;
 }
 
 body {
-    background-color: var(--background);
-    color: var(--text-color);
     overflow: hidden;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: var(--pre-bg);
+    transition: background-color 2s ease;
 }
 
-#game-container {
-    position: relative;
+#app-container {
     width: 100vw;
     height: 100vh;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#gameCanvas {
+#game-canvas {
     position: absolute;
     top: 0;
     left: 0;
-    background: radial-gradient(circle at center, hsla(240, 30%, 10%, 1), hsla(240, 40%, 3%, 1));
+    z-index: 1;
 }
 
-#ui-layer {
+/* Background Layers */
+#era-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.3;
+    pointer-events: none;
+    transition: all 2s ease;
+}
+
+.bg-prehistoric {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10 10 L20 20 L10 30" stroke="brown" fill="none"/></svg>'); /* Placeholder-ish pattern */
+    background-color: var(--pre-bg);
+}
+
+.bg-mythic {
+    background-color: var(--myth-bg);
+    background-image: radial-gradient(circle at center, white, #e0f2ff);
+}
+
+.bg-future {
+    background-color: var(--fut-bg);
+    background-image: linear-gradient(180deg, #0a043c, #001219);
+}
+
+/* UI Structure */
+#ui-overlay {
     position: relative;
     z-index: 10;
     width: 100%;
     height: 100%;
+    pointer-events: none;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    pointer-events: none;
-    padding: 2rem;
 }
 
-#ui-layer > * {
+#ui-overlay > * {
     pointer-events: auto;
 }
 
-.glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid var(--glass-border);
-    border-radius: 1.5rem;
-    box-shadow: var(--glass-shadow);
-}
-
-/* HUD */
 #hud {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 90%;
-    max-width: 1000px;
-    padding: 1rem 2rem;
-    border-radius: 1rem;
-    position: absolute;
-    top: 2rem;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.5rem 3rem;
 }
 
-.stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.glass-comic {
+    background: rgba(255, 255, 255, 0.9);
+    border: var(--comic-border);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
 }
 
-.label {
-    font-size: 0.75rem;
-    letter-spacing: 0.2rem;
-    color: var(--secondary-neon);
-    margin-bottom: 0.25rem;
+.player-info {
+    min-width: 250px;
 }
 
-.value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.25rem;
-    font-weight: bold;
+.era-label {
+    font-family: 'Bangers', cursive;
+    font-size: 1.5rem;
+    color: #111;
+    letter-spacing: 2px;
 }
 
-.health-bar-container {
-    width: 200px;
-    height: 12px;
-    background: hsla(0, 0%, 100%, 0.1);
-    border-radius: 6px;
-    overflow: hidden;
+.health-container {
+    height: 20px;
+    background: #000;
+    border: 2px solid #000;
     margin-top: 0.5rem;
 }
 
-#health-bar-fill {
+.health-bar {
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, var(--secondary-neon), var(--primary-neon));
-    transition: width 0.3s ease-out;
-    box-shadow: 0 0 10px var(--secondary-neon);
+    background: linear-gradient(90deg, #ff3c00, #ff8c00);
+    transition: width 0.3s ease;
 }
 
-/* Menu e Telas */
-#menu, #game-over {
+.logo-container h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    color: #111;
+}
+
+.highlight {
+    color: var(--neon-pink);
+    text-shadow: 2px 2px 0px #000;
+}
+
+/* Slots for Absorbed Skills */
+.icons-row {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    gap: 10px;
+}
+
+.skill-slot {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    background: #eee;
+}
+
+.skill-slot.active {
+    background: #ffcc00;
+}
+
+.skill-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Main Screens */
+/* Splash Screen Improvements */
+#splash-screen {
+    background: #050510;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
     justify-content: center;
-    padding: 3rem;
-    max-width: 500px;
+    align-items: center;
+    transition: opacity 1.5s ease;
+    overflow: hidden;
+}
+
+.crt-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 6px 100%;
+    z-index: 101;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+#dev-intro, #title-intro {
     text-align: center;
+    position: relative;
+    z-index: 102;
+}
+
+.type-effect {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    color: #888;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid white;
+    width: 0;
+    margin: 0 auto 1rem auto;
+    animation: typing 1s steps(15, end) forwards, blink 0.5s step-end infinite alternate;
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 220px; }
+}
+
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+
+.dev-name {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 5rem;
+    color: white;
+    text-shadow: 0 0 20px rgba(0, 247, 255, 0.3);
+    position: relative;
+}
+
+.glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+.glitch::before {
+    left: 4px;
+    text-shadow: -2px 0 #ff00ff;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 3s infinite linear alternate-reverse;
+}
+.glitch::after {
+    left: -4px;
+    text-shadow: -2px 0 #00ffff;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(20px, 9999px, 80px, 0); transform: skew(0.5deg); }
+    20% { clip: rect(60px, 9999px, 20px, 0); transform: skew(-0.5deg); }
+    40% { clip: rect(10px, 9999px, 50px, 0); transform: skew(0.2deg); }
+    60% { clip: rect(80px, 9999px, 30px, 0); transform: skew(-0.2deg); }
+    80% { clip: rect(30px, 9999px, 70px, 0); transform: skew(0.5deg); }
+    100% { clip: rect(50px, 9999px, 10px, 0); transform: skew(0deg); }
+}
+
+@keyframes glitch-anim2 {
+    0% { clip: rect(60px, 9999px, 20px, 0); transform: skew(-0.5deg); }
+    20% { clip: rect(20px, 9999px, 80px, 0); transform: skew(0.5deg); }
+    40% { clip: rect(80px, 9999px, 30px, 0); transform: skew(-0.2deg); }
+    60% { clip: rect(10px, 9999px, 50px, 0); transform: skew(0.2deg); }
+    80% { clip: rect(50px, 9999px, 10px, 0); transform: skew(-0.5deg); }
+    100% { clip: rect(30px, 9999px, 70px, 0); transform: skew(0deg); }
+}
+
+.logo-large {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 7rem;
+    letter-spacing: 5px;
+    color: white;
+    text-shadow: 0px 0px 30px rgba(255, 0, 255, 0.6);
+}
+
+.present-text {
+    font-family: 'Bangers', cursive;
+    color: #ffd700;
+    font-size: 2rem;
+    margin-top: -10px;
+    letter-spacing: 3px;
+    opacity: 0;
+    animation: fadeIn 1s 1.5s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.zoom-glow {
+    animation: zoomIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transform: scale(0.1);
+    opacity: 0;
+}
+
+@keyframes zoomIn {
+    to { transform: scale(1); opacity: 1; }
+}
+
+#white-flash {
+    position: absolute;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: white;
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s ease-out;
+}
+.flash-transition {
+    opacity: 1 !important;
+    transition: none !important;
+}
+
+/* Mini Pixels Animation */
+.minis-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 3rem;
+}
+
+.mini-character {
+    display: inline-block;
+    position: relative;
+    transform: scale(2);
+    margin: 0 5px;
+    animation: char-bounce 0.6s infinite alternate cubic-bezier(0.3, 0.1, 0.3, 1);
+}
+
+@keyframes char-bounce {
+    from { transform: scale(2) translateY(0); }
+    to { transform: scale(2) translateY(-15px); }
+}
+
+
+.screen {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: opacity 1s, visibility 1s;
 }
 
-#menu.active, #game-over.active {
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.active {
     opacity: 1;
     visibility: visible;
 }
 
-.logo {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 4rem;
-    letter-spacing: 0.5rem;
-    margin-bottom: 0.5rem;
-    color: white;
-    text-shadow: 0 0 20px hsla(280, 100%, 60%, 0.5);
+/* Comic Intro Animation */
+.comic-layer {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 3rem;
 }
 
-.neon {
-    color: var(--primary-neon);
-    text-shadow: 0 0 10px var(--primary-neon), 0 0 20px var(--primary-neon);
+.panel {
+    background: white;
+    border: 3px solid #000;
+    padding: 2rem;
+    box-shadow: 10px 10px 0px #000;
+    transform: rotate(-2deg);
 }
 
-.tagline {
-    font-size: 1.1rem;
-    margin-bottom: 2.5rem;
-    color: hsla(0, 0%, 100%, 0.6);
+.panel.second {
+    transform: rotate(2deg);
+    margin-top: 20px;
 }
 
-.primary-btn {
-    background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
-    color: white;
-    border: none;
-    padding: 1.2rem 3rem;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 0.75rem;
+.panel p {
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+}
+
+/* Buttons */
+.bangers-btn {
+    font-family: 'Bangers', cursive;
+    font-size: 2.5rem;
+    padding: 1rem 3rem;
+    background: #ffcc00;
+    color: #111;
+    border: var(--comic-border);
+    box-shadow: 8px 8px 0px #000;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.1rem;
-    box-shadow: 0 4px 15px hsla(280, 100%, 60%, 0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
 }
 
-.primary-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px hsla(190, 100%, 50%, 0.4);
-    filter: brightness(1.2);
+.bangers-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 4px 4px 0px #000;
 }
 
-.instructions {
-    margin-top: 2rem;
-    font-size: 0.85rem;
-    color: hsla(0, 0%, 100%, 0.4);
+.menu-content .credits {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    font-weight: bold;
 }
 
-.hidden {
-    display: none !important;
+/* Transition Effects */
+#era-transition div.vortex {
+    width: 200px;
+    height: 200px;
+    border: 10px dashed #000;
+    border-radius: 50%;
+    animation: spin 2s infinite linear;
+    margin-bottom: 2rem;
 }
 
-/* Animações Ambientais */
-@keyframes pulse {
-    0% { opacity: 0.3; }
-    50% { opacity: 0.6; }
-    100% { opacity: 0.3; }
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-#gameCanvas {
-    animation: pulse 10s infinite;
+.shifting-text {
+    font-family: 'Bangers', cursive;
+    font-size: 3rem;
+    color: #111;
+}
+
+#next-era-name {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 4rem;
+    color: #000;
+}
+
+/* Gameplay Effects */
+#popups {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.damage-num {
+    position: absolute;
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    color: #ff3c00;
+    text-shadow: 2px 2px 0px #000;
+    animation: float-up 0.8s ease-out forwards;
+}
+
+@keyframes float-up {
+    to { transform: translateY(-50px); opacity: 0; }
 }

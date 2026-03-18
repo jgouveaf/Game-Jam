@@ -3,55 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astra Void - O Desafio do Espaço</title>
+    <title>Mythic Mayhem: Prototype - Godframe</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <meta name="description" content="Um jogo de tiro espacial épico com gráficos neon e jogabilidade frenética. Jogue agora Astra Void!">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@400;700&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <meta name="description" content="Um protótipo de Mythic Mayhem, um beat 'em up evolutivo com mecânicas de absorção de habilidades e mudanças de era. Desenvolvido por Godframe.">
 </head>
-<body>
-    <div id="game-container">
-        <canvas id="gameCanvas"></canvas>
+<body class="prehistoric">
+    <div id="app-container">
+        <!-- Camada de Fundo Dinâmica -->
+        <div id="era-background" class="bg-prehistoric"></div>
+        <div id="parallax-midground"></div>
         
-        <div id="ui-layer">
-            <header id="hud" class="glass">
-                <div class="stat">
-                    <span class="label">SCORE</span>
-                    <span id="score-val" class="value">000000</span>
-                </div>
-                <div class="stat">
-                    <span class="label">HEALTH</span>
-                    <div class="health-bar-container">
-                        <div id="health-bar-fill"></div>
+        <canvas id="game-canvas"></canvas>
+
+        <div id="ui-overlay">
+            <!-- HUD Superior -->
+            <header id="hud">
+                <div class="hud-left glass-comic">
+                    <div class="player-info">
+                        <span class="era-label" id="current-era">PREHISTORIC AGE</span>
+                        <div class="health-container">
+                            <div class="health-bar" id="p-hp"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="stat">
-                    <span class="label">HI-SCORE</span>
-                    <span id="hi-score-val" class="value">000000</span>
+
+                <div class="hud-center">
+                    <div class="logo-container">
+                        <h1 id="game-logo">MYTHIC <span class="highlight">MAYHEM</span></h1>
+                    </div>
+                </div>
+
+                <div class="hud-right glass-comic">
+                    <div class="skills-slots">
+                        <span class="skill-label">ABSORBED SKILLS</span>
+                        <div id="skill-icons" class="icons-row">
+                            <div class="skill-slot empty" id="slot-1"></div>
+                            <div class="skill-slot empty" id="slot-2"></div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
-            <main id="menu" class="active glass">
-                <h1 class="logo">ASTRA <span class="neon">VOID</span></h1>
-                <p class="tagline">Sua sobrevivência depende da sua velocidade.</p>
-                <button id="start-btn" class="primary-btn">INICIAR MISSÃO</button>
-                <div class="instructions">
-                    <p>WASD ou Setas para mover • Espaço para Atirar</p>
-                </div>
+            <!-- Telas de Menu e Transições -->
+            <main id="game-screens">
+                <!-- Splash Screen (Abertura) -->
+                <section id="splash-screen" class="screen active">
+                    <div class="crt-overlay"></div>
+                    <div id="dev-intro" class="hidden">
+                        <p class="dev-text type-effect">DEVELOPED BY</p>
+                        <h2 class="dev-name glitch" data-text="GODFRAME">GODFRAME</h2>
+                        <div id="pixel-minis-container" class="minis-row"></div>
+                    </div>
+                    <div id="title-intro" class="hidden">
+                        <h1 class="logo-large zoom-glow">MYTHIC <span class="neon">MAYHEM</span></h1>
+                        <p class="present-text">O TEMPO ESTÁ SE PARTINDO...</p>
+                    </div>
+                    <div id="white-flash"></div>
+                </section>
+
+                <section id="start-menu" class="screen hidden">
+                    <div id="comic-intro" class="comic-layer">
+                        <div class="panel first">
+                            <p>O Tempo está se partindo...</p>
+                        </div>
+                        <div class="panel second">
+                            <p>Somente os que evoluem sobrevivem.</p>
+                        </div>
+                    </div>
+                    <div class="menu-content">
+                        <button id="play-btn" class="bangers-btn">INICIAR EVOLUÇÃO</button>
+                        <p class="credits">Protótipo baseado no GDD de Godframe</p>
+                    </div>
+                </section>
+
+                <section id="era-transition" class="screen hidden">
+                    <div class="vortex"></div>
+                    <h2 class="shifting-text">SALTO TEMPORAL EM CURSO...</h2>
+                    <p id="next-era-name">GRÉCIA ANTIGA</p>
+                </section>
+
+                <section id="game-over" class="screen hidden">
+                    <div class="glass-comic large">
+                        <h2>TEMPO ESGOTADO</h2>
+                        <button id="retry-btn" class="bangers-btn">TENTAR NOVAMENTE</button>
+                    </div>
+                </section>
             </main>
 
-            <footer id="game-over" class="hidden glass">
-                <h2>FIM DE JOGO</h2>
-                <div class="final-stats">
-                    <p>Score Final: <span id="final-score">0</span></p>
-                </div>
-                <button id="restart-btn" class="primary-btn">TENTAR NOVAMENTE</button>
-            </footer>
+            <!-- Feedback de Jogabilidade -->
+            <div id="popups"></div>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="game.js"></script>
 </body>
 </html>

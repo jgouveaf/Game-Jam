@@ -1,37 +1,27 @@
-# 🚀 Astra Void - Game Deploy Template
+# ⚡ Mythic Mayhem: Prototype (Godframe)
 
-Este repositório contém um jogo de tiro espacial moderno e polido, desenvolvido com **Vanilla HTML5, CSS3 e JavaScript (Canvas API)**. Ele foi projetado para ser leve, visualmente impactante e perfeitamente compatível com o **GitHub Pages**.
+Este é um protótipo funcional baseado no **Game Design Document (GDD)** da empresa **Godframe**. O jogo explora o conceito de **Evolução Dinâmica**, onde o jogador atravessa diferentes eras históricas e mitológicas enquanto luta contra rifts temporais.
 
-## ✨ Funcionalidades
-- **Estética Premium**: Interface com Blur/Glassmorphism e cores Neon HSL.
-- **Jogabilidade Fluida**: Sistema de partículas, 60 FPS estáveis e controles responsivos.
-- **Sistema de Pontuação**: Gravação de High-Score localmente via `localStorage`.
-- **Adaptativo**: Suporte a diferentes resoluções de tela.
+## 🕹️ Protótipo: Era Shift
+Neste protótipo, você pode experimentar a mecânica central de mudança de era e combate Beat 'em up 2.5D.
 
-## 🛠️ Como Jogar
-- **WASD / Setas**: Movimentar a nave.
-- **Espaço**: Disparar lasers de plasma.
-- **Objetivo**: Destruir os invasores e sobreviver o maior tempo possível!
+### Controles
+- **WASD / Setas**: Movimentar o personagem (com profundidade 2.5D).
+- **Espaço**: Ataque básico / Golpe de impacto.
+- **Mecânica de Evolução**: Derrote inimigos para acumular energia temporal e saltar para a próxima era.
+- **Absorção de Habilidades**: Inimigos especiais (com aura dourada) dropam habilidades que você pode absorver (ex: Dash, Fogo).
 
-## 🌍 Como Fazer o Deploy no GitHub Pages
-Siga estes passos simples para colocar seu jogo online em minutos:
+### Eras Incluídas
+1. **Era Pré-histórica**: Tons terrosos, inimigos primitivos, estética de pinturas rupestres.
+2. **Era Mitológica (Grécia)**: Arquitetura clássica, tons claros e divinos, seres míticos.
+3. **Era Futura (2100)**: Estética Cyberpunk, neon, alta tecnologia e batidas sintetizadas.
 
-1. **Crie um novo repositório no GitHub**: [github.com/new](https://github.com/new)
-2. **Copie estes arquivos** para a sua pasta do GitHub: `C:\Users\João Gouvea\Documents\GitHub\nome-do-seu-jogo`
-3. **Inicie o Git e suba os arquivos**:
-   ```bash
-   git init
-   git add .
-   git commit -m "Primeiro deploy do Astra Void"
-   git branch -M main
-   git remote add origin https://github.com/SEU_USUARIO/NOME_DO_REPO.git
-   git push -u origin main
-   ```
-4. **Ative o GitHub Pages**:
-   - Vá em **Settings** -> **Pages** no seu repositório.
-   - Em "Branch", selecione `main` e a pasta `/ (root)`.
-   - Clique em **Save**.
-5. **Aguarde 1 minuto** e seu jogo estará disponível na URL fornecida pelo GitHub!
+## 📋 Resumo do Projeto (GDD)
+Baseado no documento original:
+- **Título Original:** Mythic Mayhem
+- **Desenvolvedora:** Godframe
+- **Gênero:** 2.5D Beat 'em up / Action-Adventure
+- **Diferencial:** "Obsolescência Planejada" (recursos resetam entre as eras) e Evolução Visual Orgânica.
 
 ---
-*Desenvolvido com 💜 para João Gouvea.*
+*Protótipo gerado por Antigravity para João Gouvea.*
