@@ -85,20 +85,19 @@ function setup() {
     document.getElementById('play-btn').onclick = startGame;
     document.getElementById('retry-btn').onclick = startGame;
 
-    // Aguardar o clique do usuário para liberar o Áudio
-    const clickToStart = document.getElementById('click-to-start');
-    clickToStart.onclick = () => {
-        clickToStart.classList.remove('active');
-        clickToStart.classList.add('hidden');
-        runSplashSequence();
-    };
+    // Iniciar Abertura Automaticamente (A pedido do usuario)
+    runSplashSequence();
 }
 
 function runSplashSequence() {
     // Atraso inicial curto por seguranca ao carregar
     setTimeout(() => {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if(audioCtx.state === 'suspended') audioCtx.resume();
+        
+        // Magia para liberar o audio no primeiro clique solto pela tela sem travar a interface
+        document.addEventListener('click', () => {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }, {once: true});
         
         // --- MÚSICA DE SUSPENSE MEDIEVAL (Estilo Castle Crashers) --- //
         const masterGain = audioCtx.createGain();
