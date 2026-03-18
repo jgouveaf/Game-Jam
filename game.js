@@ -13,8 +13,6 @@ const startMenu = document.getElementById('start-menu');
 const splashScreen = document.getElementById('splash-screen');
 const devIntro = document.getElementById('dev-intro');
 const titleIntro = document.getElementById('title-intro');
-const pixelMinisContainer = document.getElementById('pixel-minis-container');
-const whiteFlash = document.getElementById('white-flash');
 const transitionScreen = document.getElementById('era-transition');
 
 const gameOverScreen = document.getElementById('game-over');
@@ -100,104 +98,58 @@ function runSplashSequence() {
         const gain = audioCtx.createGain();
         osc.type = type;
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        // Cinematic sub-bass swell
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + duration * 0.3);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + duration);
     }
 
-    // 1. Mostrar Godframe + Minis
+    // 1. Mostrar Godframe (Fade In lento)
     setTimeout(() => {
         devIntro.classList.remove('hidden');
         devIntro.classList.add('active');
-        playTone(440, 'square', 0.1, 0.05);
-        setTimeout(() => playTone(554, 'square', 0.1, 0.05), 150);
-        setTimeout(() => playTone(659, 'square', 0.4, 0.05), 300);
-        createMiniPixies();
-    }, 800);
+        // Cinematic deep booooom (Nolan style)
+        playTone(55, 'sawtooth', 5.0, 0.15); // Deep bass
+        playTone(32, 'sine', 5.0, 0.4); // Sub rumble
+    }, 1000);
 
-    // 2. Flash and Title
+    // 2. Transição para o Título (Fade Out Godframe, Fade In Título)
     setTimeout(() => {
-        whiteFlash.classList.add('flash-transition');
-        playTone(200, 'sawtooth', 0.5, 0.2);
-        playTone(100, 'square', 0.5, 0.3);
+        devIntro.classList.remove('active'); // Start crossfade
         
         setTimeout(() => {
-            devIntro.classList.remove('active');
             devIntro.classList.add('hidden');
-            
             titleIntro.classList.remove('hidden');
-            titleIntro.classList.add('active');
             
-            whiteFlash.classList.remove('flash-transition'); // Fades out
-            
-            // Impact sound
-            playTone(880, 'sine', 1.0, 0.1);
-            playTone(440, 'triangle', 1.5, 0.2);
-        }, 100);
-    }, 4500);
+            // Trigger Fade In Título
+            setTimeout(() => {
+                titleIntro.classList.add('active');
+                // Thematic title boooom
+                playTone(45, 'sawtooth', 6.0, 0.2);
+                playTone(25, 'sine', 6.0, 0.5);
+                playTone(65, 'sine', 6.0, 0.1);
+            }, 100); 
+        }, 3500); // Tempo para o texto Godframe evaporar
+    }, 6000); // Tempo segurando The Godframe
 
     // 3. Fim da splash e Menu Iniciar
     setTimeout(() => {
-        splashScreen.style.opacity = '0';
+        titleIntro.classList.remove('active'); // Fade out title
+        
         setTimeout(() => {
-            splashScreen.classList.add('hidden');
-            startMenu.classList.remove('hidden');
-            startMenu.classList.add('active');
-            playTone(600, 'sine', 0.2);
-            playTone(800, 'sine', 0.4);
-        }, 1500);
-    }, 8500);
-}
-
-function createMiniPixies() {
-    pixelMinisContainer.innerHTML = '';
-    const colors = ['#00f7ff', '#ff00ff', '#ffd700', '#00ff00', '#ff3c00'];
-    
-    // Matrizes 5x5: 1=cor principal, 2=olho(branco)
-    const bodyShapes = [
-        [ // Cavaleiro
-            0,1,1,1,0,
-            1,2,1,2,1,
-            1,1,1,1,1,
-            0,1,0,1,0,
-            1,0,0,0,1
-        ],
-        [ // Mago
-            0,0,1,0,0,
-            0,1,1,1,0,
-            1,2,1,2,1,
-            0,1,1,1,0,
-            0,1,0,1,0
-        ]
-    ];
-
-    for(let i=0; i<6; i++) {
-        const mini = document.createElement('div');
-        mini.className = 'mini-character';
-        const color = colors[i % colors.length];
-        const shape = bodyShapes[i % 2];
-        
-        let boxShadowStr = [];
-        const scale = 4; // px size
-        for(let py=0; py<5; py++){
-            for(let px=0; px<5; px++){
-                const val = shape[py*5 + px];
-                if(val === 1) boxShadowStr.push(`${px*scale}px ${py*scale}px 0 ${color}`);
-                if(val === 2) boxShadowStr.push(`${px*scale}px ${py*scale}px 0 white`);
-            }
-        }
-        
-        mini.style.boxShadow = boxShadowStr.join(', ');
-        mini.style.width = scale + 'px';
-        mini.style.height = scale + 'px';
-        mini.style.background = 'transparent';
-
-        mini.style.animationDelay = (i * 0.15) + 's';
-        pixelMinisContainer.appendChild(mini);
-    }
+            splashScreen.style.opacity = '0';
+            setTimeout(() => {
+                splashScreen.classList.add('hidden');
+                startMenu.classList.remove('hidden');
+                startMenu.classList.add('active');
+                playTone(85, 'sine', 4.0, 0.1); // subtle ambient tone entering menu
+            }, 2000);
+        }, 3500);
+    }, 15000); // Title stays for a long majestic moment
 }
 
 function startGame() {

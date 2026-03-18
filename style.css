@@ -217,131 +217,63 @@ body {
     opacity: 0.6;
 }
 
-#dev-intro, #title-intro { text-align: center; position: relative; z-index: 102; }
+.cinematic-text {
+    text-align: center;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    z-index: 102;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 3.5s ease-in-out;
+    pointer-events: none;
+}
 
-.type-effect {
+.cinematic-text.active {
+    opacity: 1;
+}
+
+.present-tiny {
     font-family: 'Outfit', sans-serif;
     font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: 5px;
-    color: #888;
-    margin-bottom: 2.5rem;
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 2px solid white;
-    width: 0;
-    margin: 0 auto 2.5rem auto;
-    animation: typing 1s steps(15, end) forwards, blink 0.5s step-end infinite alternate;
+    font-weight: 300;
+    letter-spacing: 20px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin: 1rem 0;
 }
 
-@keyframes typing { from { width: 0; } to { width: 14ch; } }
-@keyframes blink { 50% { border-color: transparent; } }
-
-.dev-name {
-    font-family: 'Caveat Brush', cursive;
-    font-weight: 400;
-    font-size: 6rem;
-    color: white;
-    text-shadow: 0 0 30px rgba(0, 247, 255, 0.4);
-    position: relative;
-    letter-spacing: 5px;
-}
-
-.glitch::before, .glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    opacity: 0.8;
-}
-.glitch::before {
-    left: 4px; text-shadow: -2px 0 #ff00ff;
-    clip: rect(44px, 450px, 56px, 0);
-    animation: glitch-anim 3s infinite linear alternate-reverse;
-}
-.glitch::after {
-    left: -4px; text-shadow: -2px 0 #00ffff;
-    clip: rect(44px, 450px, 56px, 0);
-    animation: glitch-anim2 2.5s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-anim {
-    0% { clip: rect(20px, 9999px, 80px, 0); transform: skew(0.5deg); }
-    20% { clip: rect(60px, 9999px, 20px, 0); transform: skew(-0.5deg); }
-    40% { clip: rect(10px, 9999px, 50px, 0); transform: skew(0.2deg); }
-    60% { clip: rect(80px, 9999px, 30px, 0); transform: skew(-0.2deg); }
-    80% { clip: rect(30px, 9999px, 70px, 0); transform: skew(0.5deg); }
-    100% { clip: rect(50px, 9999px, 10px, 0); transform: skew(0deg); }
-}
-
-@keyframes glitch-anim2 {
-    0% { clip: rect(60px, 9999px, 20px, 0); transform: skew(-0.5deg); }
-    20% { clip: rect(20px, 9999px, 80px, 0); transform: skew(0.5deg); }
-    40% { clip: rect(80px, 9999px, 30px, 0); transform: skew(-0.2deg); }
-    60% { clip: rect(10px, 9999px, 50px, 0); transform: skew(0.2deg); }
-    80% { clip: rect(50px, 9999px, 10px, 0); transform: skew(-0.5deg); }
-    100% { clip: rect(30px, 9999px, 70px, 0); transform: skew(0deg); }
-}
-
-.logo-large {
-    font-family: 'Caveat Brush', cursive;
-    font-weight: 400;
-    font-size: 8rem;
-    letter-spacing: 10px;
-    color: white;
-    text-shadow: 0px 0px 40px rgba(255, 0, 255, 0.5), 0px 10px 20px rgba(0,0,0,0.9);
-}
-
-.present-text {
+.dev-name-movie {
     font-family: 'Outfit', sans-serif;
-    color: #ffd700;
-    font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 8px;
-    margin-top: 2rem;
-    opacity: 0;
-    animation: fadeIn 1s 1.5s forwards;
-    text-shadow: 0 5px 10px rgba(0,0,0,0.8);
+    font-size: 4rem;
+    color: #fff;
+    letter-spacing: 40px;
+    text-indent: 40px;
+    text-transform: uppercase;
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+    margin: 1rem 0;
 }
 
-@keyframes fadeIn { to { opacity: 1; } }
-
-.zoom-glow {
-    animation: zoomIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    transform: scale(0.1);
-    opacity: 0;
+.logo-movie {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 8rem;
+    letter-spacing: 30px;
+    text-indent: 30px;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: 0 0 60px rgba(255, 60, 0, 0.3), 0 0 120px rgba(0, 247, 255, 0.2);
+    transform: scale(0.95);
+    animation: movie-zoom 12s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-@keyframes zoomIn { to { transform: scale(1); opacity: 1; } }
-
-#white-flash {
-    position: absolute;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: white;
-    z-index: 150;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 2.5s ease-out;
-}
-.flash-transition {
-    opacity: 1 !important;
-    transition: none !important;
-}
-
-/* Mini Pixels Animation */
-.minis-row { display: flex; justify-content: center; gap: 40px; margin-top: 4rem; }
-
-.mini-character {
-    display: inline-block;
-    position: relative;
-    transform: scale(2.5);
-    margin: 0 5px;
-    animation: char-bounce 0.6s infinite alternate cubic-bezier(0.3, 0.1, 0.3, 1);
-    filter: drop-shadow(0 10px 5px rgba(0,0,0,0.5));
-}
-
-@keyframes char-bounce {
-    from { transform: scale(2.5) translateY(0); }
-    to { transform: scale(2.5) translateY(-20px); }
+@keyframes movie-zoom {
+    to { transform: scale(1.05); }
 }
 
 
