@@ -85,8 +85,71 @@ function setup() {
     document.getElementById('play-btn').onclick = startGame;
     document.getElementById('retry-btn').onclick = startGame;
 
+    // Remove fundos brancos automaticamente das imagens dos Lutadores
+    processTransparentBrawlers();
+
     // Iniciar Abertura Automaticamente (A pedido do usuario)
     runSplashSequence();
+}
+
+function processTransparentBrawlers() {
+    function transparentizeImage(imgUrl, callback) {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.src = imgUrl;
+        img.onload = () => {
+            const c = document.createElement('canvas');
+            c.width = img.width; c.height = img.height;
+            const ctx = c.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(img, 0, 0);
+            const imgData = ctx.getImageData(0, 0, c.width, c.height);
+            const data = imgData.data;
+
+            const isWhite = (r, g, b) => r > 240 && g > 240 && b > 240;
+
+            let queue = [];
+            const checked = new Uint8Array(c.width * c.height);
+
+            const addIfValid = (x, y) => {
+                if(x >= 0 && x < c.width && y >= 0 && y < c.height) {
+                    const idx = (y * c.width + x);
+                    if(!checked[idx]) {
+                        const ptr = idx * 4;
+                        if(isWhite(data[ptr], data[ptr+1], data[ptr+2])) {
+                            queue.push({x, y});
+                            checked[idx] = 1;
+                        }
+                    }
+                }
+            };
+
+            // Seed as 4 bordas para o Flood Fill
+            for(let x=0; x<c.width; x++) { addIfValid(x, 0); addIfValid(x, c.height-1); }
+            for(let y=0; y<c.height; y++) { addIfValid(0, y); addIfValid(c.width-1, y); }
+
+            while(queue.length > 0) {
+                const {x, y} = queue.pop();
+                const ptr = (y * c.width + x) * 4;
+                data[ptr+3] = 0; // Torna transparente!
+
+                addIfValid(x+1, y); addIfValid(x-1, y);
+                addIfValid(x, y+1); addIfValid(x, y-1);
+            }
+
+            ctx.putImageData(imgData, 0, 0);
+            callback(c.toDataURL('image/png'));
+        };
+    }
+
+    document.querySelectorAll('.char-brawler').forEach(el => {
+        const bg = el.style.backgroundImage;
+        if(bg && bg.includes('url(')) {
+            const url = bg.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+            transparentizeImage(url, (cleanDataUrl) => {
+                el.style.backgroundImage = `url('${cleanDataUrl}')`;
+            });
+        }
+    });
 }
 
 function runSplashSequence() {
