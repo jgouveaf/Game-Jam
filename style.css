@@ -328,78 +328,171 @@ body {
     100% { transform: translate(2px, -1px); }
 }
 
-.menu-content.bouncy-style {
+/* Layout do Menu (Left/Right) */
+.cuphead-menu {
+    background-color: #d1bfae; 
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 2rem 5rem;
+    width: 100vw; height: 100vh;
+}
+
+.vintage-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 5;
+    animation: film-jitter 0.2s infinite;
+}
+@keyframes film-jitter {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(-2px, 2px); }
+    100% { transform: translate(2px, -1px); }
+}
+
+/* Fundo do Relógio (Eras colidindo) */
+.clock-vortex {
+    position: absolute;
+    width: 150vw; height: 150vw;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(from 0deg, #ff9900, #ff3300, #ff9900, #ffffaa, #ff9900);
+    animation: vortex-spin 40s linear infinite;
+    z-index: 0;
+    opacity: 0.9;
+}
+@keyframes vortex-spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+.clock-face {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 70vw; height: 70vw;
+    transform: translate(-50%, -50%);
+    border: 20px dashed rgba(0,0,0,0.5);
+    border-radius: 50%;
+    animation: slow-reverse-spin 60s linear infinite;
+}
+@keyframes slow-reverse-spin { 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
+
+.clock-face .num {
+    position: absolute;
+    font-family: 'Outfit', sans-serif;
+    font-size: 10rem;
+    font-weight: 900;
+    color: rgba(0,0,0,0.4);
+    text-shadow: 5px 5px 0 #fff;
+}
+.clock-face .num12 { top: 40px; left: 50%; transform: translateX(-50%); }
+.clock-face .num6 { bottom: 40px; left: 50%; transform: translateX(-50%); }
+.clock-face .num3 { top: 50%; right: 40px; transform: translateY(-50%); }
+.clock-face .num9 { top: 50%; left: 40px; transform: translateY(-50%); }
+
+.clock-hand {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 20px; height: 35vw;
+    background: #111;
+    transform-origin: top center;
+    border-radius: 10px;
+    box-shadow: 10px 10px 0 rgba(0,0,0,0.4);
+    animation: tick-tock 60s steps(60) infinite;
+}
+@keyframes tick-tock { 100% { transform: rotate(360deg); } }
+
+/* PAINEL ESQUERDO: Layout Castle Crashers */
+.menu-left-panel {
+    z-index: 10;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    z-index: 10;
-    animation: wobbly-zoom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    width: 450px;
 }
 
-@keyframes wobbly-zoom {
-    0% { transform: scale(0) rotate(-10deg); }
-    100% { transform: scale(1) rotate(0deg); }
-}
-
-.game-logo-cartoon {
+.game-logo-cartoon-small {
     font-family: 'Caveat Brush', cursive;
-    font-size: 11rem;
+    font-size: 6.5rem;
     line-height: 0.8;
     color: #fff;
-    -webkit-text-stroke: 8px #111;
-    text-shadow: 12px 12px 0 #111;
-    margin-bottom: 2rem;
-    transform: rotate(-3deg);
+    -webkit-text-stroke: 4px #111;
+    text-shadow: 8px 8px 0 #111;
+    margin-bottom: 3rem;
+    transform: rotate(-4deg);
     animation: float-tilt 3s ease-in-out infinite alternate;
 }
-
-.highlight-toon {
-    color: #ff3300;
-}
-
+.highlight-toon { color: #5cd65c; }
 @keyframes float-tilt {
-    0% { transform: rotate(-3deg) translateY(0); }
-    100% { transform: rotate(2deg) translateY(-15px); }
+    0% { transform: rotate(-4deg) translateY(0); }
+    100% { transform: rotate(1deg) translateY(-10px); }
 }
 
-.tagline-toon {
-    font-family: 'Caveat Brush', cursive;
-    font-size: 3rem;
-    color: #111;
-    background: #ffcc00;
-    padding: 0.5rem 2rem;
-    border: 4px solid #111;
-    border-radius: 50px;
-    box-shadow: 6px 6px 0 #111;
-    transform: rotate(2deg);
-    margin-bottom: 4rem;
+.button-stack {
+    display: flex; flex-direction: column; gap: 15px;
 }
 
-.toon-btn {
+.toon-btn-stack {
     font-family: 'Caveat Brush', cursive;
-    font-size: 3rem;
-    padding: 1rem 3rem;
-    background: #ffcc00;
+    font-size: 2.5rem;
+    padding: 0.7rem 1.5rem;
     color: #111;
-    border: 6px solid #111;
-    border-radius: 16px;
+    text-align: center;
+    border: 5px solid #111;
+    border-radius: 18px;
     cursor: pointer;
-    box-shadow: 8px 10px 0 #111;
+    box-shadow: 6px 8px 0 #111;
     transition: all 0.1s;
     user-select: none;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+}
+.toon-btn-stack::after {
+    content: ''; position: absolute;
+    top: 5px; left: 10px; width: calc(100% - 20px); height: 12px;
+    background: rgba(255,255,255,0.4); border-radius: 10px; pointer-events: none;
 }
 
-.toon-btn:hover {
-    background: #ffe600;
-    transform: translateY(-4px);
-    box-shadow: 8px 14px 0 #111;
+.color-orange { background: #ffaa00; }
+.color-blue { background: #4da6ff; }
+.color-green { background: #5cd65c; }
+.color-purple { background: #d24dff; }
+
+.toon-btn-stack:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 6px 10px 0 #111; filter: brightness(1.2);
+}
+.toon-btn-stack:active {
+    transform: translateY(6px); box-shadow: 0 2px 0 #111;
 }
 
-.toon-btn:active {
-    transform: translateY(8px);
-    box-shadow: 0 2px 0 #111;
+/* PAINEL DIREITO: Lutadores */
+.menu-right-panel {
+    z-index: 10;
+    position: absolute;
+    right: 0; top: 0;
+    width: 65%; height: 100%;
+}
+
+.char-brawler {
+    position: absolute;
+    width: 350px; height: 350px;
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    filter: drop-shadow(10px 10px 0 rgba(0,0,0,0.6));
+    animation: char-bounce 2s infinite alternate ease-in-out;
+}
+
+.caveman { bottom: 5%; right: 5%; animation-duration: 2.1s; transform: rotate(-5deg); z-index: 15; }
+.pharaoh { top: 15%; right: 10%; animation-duration: 1.8s; transform: rotate(8deg); z-index: 14; }
+.cowboy { bottom: 20%; left: 0%; animation-duration: 2.4s; transform: rotate(-8deg); z-index: 16; }
+.modern { top: 10%; left: 20%; animation-duration: 1.9s; transform: rotate(5deg) scale(0.9); z-index: 12; }
+.spartan { top: 40%; left: -10%; animation-duration: 2.2s; transform: rotate(-12deg) scale(1.1); z-index: 13; }
+
+@keyframes char-bounce {
+    0% { margin-top: 0; }
+    100% { margin-top: -30px; }
 }
 
 .menu-content .credits {

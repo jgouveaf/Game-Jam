@@ -68,13 +68,38 @@
                 </section>
 
                 <section id="start-menu" class="screen hidden cuphead-menu">
+                    <!-- Fundo do Relógio (Eras colidindo) -->
+                    <div class="clock-vortex">
+                        <div class="clock-face">
+                            <span class="num num12">XII</span>
+                            <span class="num num3">III</span>
+                            <span class="num num6">VI</span>
+                            <span class="num num9">IX</span>
+                        </div>
+                        <div class="clock-hand"></div>
+                    </div>
                     <div class="vintage-overlay"></div>
-                    <div class="menu-content bouncy-style">
-                        <h1 class="game-logo-cartoon">MYTHIC <br><span class="highlight-toon">MAYHEM</span></h1>
-                        <p class="tagline-toon">A TEMPORAL BRAWL!</p>
-                        <button id="play-btn" class="toon-btn">
-                            COMEÇAR A PANCADARIA!
-                        </button>
+
+                    <!-- Esquerda: Botões Empilhados -->
+                    <div class="menu-left-panel">
+                        <h1 class="game-logo-cartoon-small">MYTHIC <br><span class="highlight-toon">MAYHEM</span></h1>
+                        
+                        <div class="button-stack">
+                            <button id="play-btn" class="toon-btn-stack color-orange">NOVA JORNADA</button>
+                            <button class="toon-btn-stack color-blue">MULTIPLAYER</button>
+                            <button class="toon-btn-stack color-green">AJUDA & OPÇÕES</button>
+                            <button class="toon-btn-stack color-purple">CONTEÚDO EXTRA</button>
+                        </div>
+                    </div>
+
+                    <!-- Direita: Personagens Flutuantes/Posando -->
+                    <div class="menu-right-panel">
+                        <!-- Salve as imagens na pasta assets com estes nomes exatos! -->
+                        <div class="char-brawler caveman" style="background-image: url('assets/cavernas.png');"></div>
+                        <div class="char-brawler pharaoh" style="background-image: url('assets/farao.png');"></div>
+                        <div class="char-brawler spartan" style="background-image: url('assets/espartano.png');"></div>
+                        <div class="char-brawler cowboy" style="background-image: url('assets/cowboy.png');"></div>
+                        <div class="char-brawler modern" style="background-image: url('assets/soldado.png');"></div>
                     </div>
                 </section>
 
