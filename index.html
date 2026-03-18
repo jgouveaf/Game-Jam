@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astra Void - O Desafio do Espaço</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Um jogo de tiro espacial épico com gráficos neon e jogabilidade frenética. Jogue agora Astra Void!">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="ui-layer">
+            <header id="hud" class="glass">
+                <div class="stat">
+                    <span class="label">SCORE</span>
+                    <span id="score-val" class="value">000000</span>
+                </div>
+                <div class="stat">
+                    <span class="label">HEALTH</span>
+                    <div class="health-bar-container">
+                        <div id="health-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span class="label">HI-SCORE</span>
+                    <span id="hi-score-val" class="value">000000</span>
+                </div>
+            </header>
+
+            <main id="menu" class="active glass">
+                <h1 class="logo">ASTRA <span class="neon">VOID</span></h1>
+                <p class="tagline">Sua sobrevivência depende da sua velocidade.</p>
+                <button id="start-btn" class="primary-btn">INICIAR MISSÃO</button>
+                <div class="instructions">
+                    <p>WASD ou Setas para mover • Espaço para Atirar</p>
+                </div>
+            </main>
+
+            <footer id="game-over" class="hidden glass">
+                <h2>FIM DE JOGO</h2>
+                <div class="final-stats">
+                    <p>Score Final: <span id="final-score">0</span></p>
+                </div>
+                <button id="restart-btn" class="primary-btn">TENTAR NOVAMENTE</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="game.js"></script>
+</body>
+</html>
