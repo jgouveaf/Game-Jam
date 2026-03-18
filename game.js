@@ -85,8 +85,13 @@ function setup() {
     document.getElementById('play-btn').onclick = startGame;
     document.getElementById('retry-btn').onclick = startGame;
 
-    // Iniciar Abertura
-    runSplashSequence();
+    // Aguardar o clique do usuário para liberar o Áudio
+    const clickToStart = document.getElementById('click-to-start');
+    clickToStart.onclick = () => {
+        clickToStart.classList.remove('active');
+        clickToStart.classList.add('hidden');
+        runSplashSequence();
+    };
 }
 
 function runSplashSequence() {

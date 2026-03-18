@@ -12,6 +12,11 @@
 </head>
 <body class="prehistoric">
     <div id="app-container">
+        <!-- Bloqueio para o Áudio do Navegador -->
+        <div id="click-to-start" class="screen active">
+            <h1 class="bounce-text">CLIQUE PARA INICIAR</h1>
+        </div>
+
         <!-- Camada de Fundo Dinâmica -->
         <div id="era-background" class="bg-prehistoric"></div>
         <div id="parallax-midground"></div>
@@ -62,16 +67,13 @@
                     </div>
                 </section>
 
-                <section id="start-menu" class="screen hidden">
-                    <div class="cinematic-backdrop">
-                        <div class="shattered-time"></div>
-                    </div>
-                    <div class="menu-content award-style">
-                        <h1 class="game-logo-huge glow-pulse">MYTHIC <br><span class="highlight">MAYHEM</span></h1>
-                        <p class="tagline">TIME IS SHATTERING. EVOLVE OR DIE.</p>
-                        <button id="play-btn" class="award-btn">
-                            <span class="btn-text">INICIAR JORNADA</span>
-                            <div class="btn-glow"></div>
+                <section id="start-menu" class="screen hidden cuphead-menu">
+                    <div class="vintage-overlay"></div>
+                    <div class="menu-content bouncy-style">
+                        <h1 class="game-logo-cartoon">MYTHIC <br><span class="highlight-toon">MAYHEM</span></h1>
+                        <p class="tagline-toon">A TEMPORAL BRAWL!</p>
+                        <button id="play-btn" class="toon-btn">
+                            COMEÇAR A PANCADARIA!
                         </button>
                     </div>
                 </section>
