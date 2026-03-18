@@ -90,31 +90,60 @@ function setup() {
 }
 
 function runSplashSequence() {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    function playTone(freq, type, duration, vol=0.1) {
+    // Atraso inicial curto por seguranca ao carregar
+    setTimeout(() => {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if(audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        // Cinematic sub-bass swell
-        gain.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + duration * 0.3);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-    }
+        
+        // --- MÚSICA DE TRAMA (Dark Suspense Synth) --- //
+        const masterGain = audioCtx.createGain();
+        masterGain.connect(audioCtx.destination);
+        masterGain.gain.value = 0.6;
 
-    // 1. Mostrar Godframe (Fade In lento)
+        // Pad Drone Cinematografico: Deep Bass (41Hz E1)
+        const drone = audioCtx.createOscillator();
+        const droneGain = audioCtx.createGain();
+        drone.type = 'sawtooth';
+        drone.frequency.value = 41.2; 
+        
+        // Lowpass filter para suavizar o sawtooth num som denso e imersivo (Hans Zimmer)
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 150;
+        
+        droneGain.gain.setValueAtTime(0, audioCtx.currentTime);
+        droneGain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 8); // swell lento de 8s
+        droneGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 16); // fade out para o menu
+
+        drone.connect(filter).connect(droneGain).connect(masterGain);
+        drone.start();
+        drone.stop(audioCtx.currentTime + 16);
+
+        // Suspense Tones (Ecoando na abertura)
+        function playPluck(freq, time, decay) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0, audioCtx.currentTime + time);
+            gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + time + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + time + decay);
+            osc.connect(gain).connect(masterGain);
+            osc.start(audioCtx.currentTime + time);
+            osc.stop(audioCtx.currentTime + time + decay);
+        }
+
+        // Notas da trama (Tensão) crescendo no background escuro
+        playPluck(164.81, 1, 5);  // E3
+        playPluck(195.99, 4.5, 6); // G3
+        playPluck(246.94, 8, 7);  // B3
+        playPluck(233.08, 11, 8); // Bb3 (Tensão dissonante pro climax!)
+    }, 100);
+
+    // 1. Mostrar Godframe (Fade In lento no fundo escuro)
     setTimeout(() => {
         devIntro.classList.remove('hidden');
         devIntro.classList.add('active');
-        // Cinematic deep booooom (Nolan style)
-        playTone(55, 'sawtooth', 5.0, 0.15); // Deep bass
-        playTone(32, 'sine', 5.0, 0.4); // Sub rumble
     }, 1000);
 
     // 2. Transição para o Título (Fade Out Godframe, Fade In Título)
@@ -128,10 +157,6 @@ function runSplashSequence() {
             // Trigger Fade In Título
             setTimeout(() => {
                 titleIntro.classList.add('active');
-                // Thematic title boooom
-                playTone(45, 'sawtooth', 6.0, 0.2);
-                playTone(25, 'sine', 6.0, 0.5);
-                playTone(65, 'sine', 6.0, 0.1);
             }, 100); 
         }, 3500); // Tempo para o texto Godframe evaporar
     }, 6000); // Tempo segurando The Godframe
@@ -146,10 +171,9 @@ function runSplashSequence() {
                 splashScreen.classList.add('hidden');
                 startMenu.classList.remove('hidden');
                 startMenu.classList.add('active');
-                playTone(85, 'sine', 4.0, 0.1); // subtle ambient tone entering menu
             }, 2000);
         }, 3500);
-    }, 15000); // Title stays for a long majestic moment
+    }, 15000); // Title stays for a majestic duration
 }
 
 function startGame() {
@@ -162,6 +186,10 @@ function startGame() {
     
     startMenu.classList.add('hidden');
     gameOverScreen.classList.add('hidden');
+    
+    // REVELA O HUD DE GAMEPLAY NESSE MOMENTO!
+    document.getElementById('hud').classList.remove('hidden');
+    
     gameState = 'PLAYING';
     enemies = [];
     requestAnimationFrame(gameLoop);
