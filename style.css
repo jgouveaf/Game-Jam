@@ -484,15 +484,15 @@ body {
 }
 
 /* 
-    POSE DE PÔSTER (TEAM POSE)! 
-    Eles formam uma base sólida à direita, ancorados no "chão" da tela.
-    Nenhuma animação, 100% integrados como arte de fundo!
+    PANCADARIA NO MENU (ACTION POSES CAÓTICOS)! 
+    Imagens dinâmicas geradas no estilo Castle Crashers
+    Eles estão posicionados de forma caótica em volta do relógio, mid-air!
 */
-.spartan { bottom: -2%; right: 25%; width: 550px; height: 550px; z-index: 17; transform: rotate(-2deg); } /* Lider, centralizado */
-.cowboy { bottom: 5%; right: 45%; width: 480px; height: 480px; z-index: 16; transform: rotate(4deg); } /* Cobertura lado esquerdo */
-.caveman { bottom: -5%; right: 0%; width: 450px; height: 450px; z-index: 15; transform: scaleX(-1) rotate(-8deg); } /* Cobertura lado direito, invertido pra olhar pro centro */
-.pharaoh { bottom: 35%; right: 8%; width: 400px; height: 400px; z-index: 13; transform: rotate(5deg); } /* Fundo direito */
-.modern { bottom: 30%; right: 35%; width: 380px; height: 380px; z-index: 12; transform: rotate(-3deg); } /* Fundo central-esquerdo */
+.spartan { bottom: -10%; right: 28%; width: 550px; height: 550px; z-index: 17; transform: rotate(-5deg); filter: drop-shadow(15px 25px 0 rgba(0,0,0,0.35)) saturate(1.3); } /* Leaping Center Attack */
+.cowboy { bottom: -8%; left: 0%; width: 500px; height: 500px; z-index: 16; transform: rotate(8deg); filter: drop-shadow(10px 15px 0 rgba(0,0,0,0.4)) saturate(1.3); } /* Sliding / Shooting right */
+.caveman { top: -5%; right: -5%; width: 500px; height: 500px; z-index: 15; transform: scaleX(-1) rotate(15deg); filter: drop-shadow(-15px 20px 0 rgba(0,0,0,0.3)) saturate(1.3); } /* Jumping down from top right! */
+.pharaoh { top: -10%; right: 30%; width: 450px; height: 450px; z-index: 13; transform: rotate(-10deg); filter: drop-shadow(10px 30px 0 rgba(0,0,0,0.35)) saturate(1.3); } /* Floating/hovering top center-right */
+.modern { top: -10%; left: 18%; width: 420px; height: 420px; z-index: 12; transform: rotate(10deg); filter: drop-shadow(10px 15px 0 rgba(0,0,0,0.3)) saturate(1.3); } /* Running/Tactical mid-air */
 
 .menu-content .credits {
     margin-top: 1rem;
