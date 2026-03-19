@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mythic Mayhem: Prototype - Godframe</title>
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,13 +99,10 @@
                 </section>
 
                 <section id="overworld-map" class="screen hidden">
-                    <div class="map-container gigante">
-                        <!-- Zonas Visuais -->
-                        <div class="map-zone zone-prehistoric"></div>
-                        <div class="map-zone zone-medieval"></div>
-                        <div class="map-zone zone-future"></div>
+                    <div class="map-container">
+                        <!-- Custom Map Background -->
+                        <div class="map-bg"></div>
                         
-                        <!-- Elementos de Ligação -->
                         <div class="map-path prehistoric-path"></div>
                         <div class="map-path medieval-path"></div>
                         <div class="map-path future-path"></div>
@@ -125,7 +122,7 @@
                             <div class="world-label">FUTURO</div>
                         </div>
 
-                        <!-- Bonequinho Customizado (Imagem Cavernas) -->
+                        <!-- Player Avatar Proxy -->
                         <div id="map-player" class="map-avatar"></div>
                     </div>
                 </section>
