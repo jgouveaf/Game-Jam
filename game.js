@@ -287,6 +287,7 @@ function finishSplash() {
 }
 
 function startGame() {
+    console.log("Iniciando Jogo...");
     currentEraIndex = 0;
     enemiesDefeated = 0;
     player.health = 100;

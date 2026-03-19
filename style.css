@@ -679,22 +679,52 @@ body {
 /* Avatar do Jogador no Mapa */
 #map-player {
     position: absolute;
-    width: 60px;
-    height: 80px;
-    background: #3d2b1f;
-    border: 5px solid #000;
-    border-radius: 15px;
+    width: 70px;
+    height: 90px;
     z-index: 20;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    transition: all 0.8s cubic-bezier(0.45, 0, 0.55, 1);
+    filter: drop-shadow(0 10px 5px rgba(0,0,0,0.3));
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
 }
 
-#map-player::before {
-    content: "👀";
-    font-size: 20px;
+.avatar-body {
+    width: 40px; 
+    height: 50px;
+    background: #8b4513;
+    border: 4px solid #000;
+    border-radius: 12px 12px 10px 10px;
+    position: relative;
+    animation: walk-bounce 0.4s infinite alternate;
+}
+
+.avatar-head {
+    width: 45px; 
+    height: 38px;
+    background: #4a3423; /* Dark hair */
+    border: 4px solid #000;
+    border-radius: 50% 50% 10px 10px;
+    margin-bottom: -5px;
+    z-index: 2;
+    position: relative;
+}
+
+.avatar-club {
+    width: 14px; 
+    height: 35px;
+    background: #aaa;
+    border: 3px solid #000;
+    border-radius: 10px 10px 5px 5px;
+    position: absolute;
+    right: -18px;
+    top: 5px;
+    transform: rotate(20deg);
+}
+
+@keyframes walk-bounce {
+    from { transform: translateY(0) scaleY(1); }
+    to { transform: translateY(-10px) scaleY(0.95); }
 }
 
 /* Animação para os Caminhos */
