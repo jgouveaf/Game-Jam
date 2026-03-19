@@ -338,6 +338,8 @@ body {
     align-items: center;
     padding: 2rem 5rem;
     width: 100vw; height: 100vh;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Cenário 2D de Guerra - Arte Customizada (Explosões, Detritos, Caos) */
@@ -346,6 +348,8 @@ body {
     top: 0; left: 0; width: 100vw; height: 100vh;
     z-index: 0;
     background: url('assets/warzone_bg.png') center/cover no-repeat;
+    /* Faz a arte de background segurar a qualidade nativa em monitores 4K */
+    image-rendering: high-quality;
 }
 
 .vintage-overlay {
@@ -357,53 +361,7 @@ body {
     z-index: 5;
 }
 
-/* Fundo do Relógio (Eras colidindo) agora super sutil como um decalque no céu */
-.clock-vortex {
-    position: absolute;
-    width: 150vw; height: 150vw;
-    top: 20%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.05), transparent, rgba(255,255,255,0.1), transparent);
-    animation: vortex-spin 80s linear infinite;
-    z-index: 1;
-}
-@keyframes vortex-spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-
-.clock-face {
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 70vw; height: 70vw;
-    transform: translate(-50%, -50%);
-    border: 20px dashed rgba(0,0,0,0.5);
-    border-radius: 50%;
-    animation: slow-reverse-spin 60s linear infinite;
-}
-@keyframes slow-reverse-spin { 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
-
-.clock-face .num {
-    position: absolute;
-    font-family: 'Outfit', sans-serif;
-    font-size: 10rem;
-    font-weight: 900;
-    color: rgba(0,0,0,0.4);
-    text-shadow: 5px 5px 0 #fff;
-}
-.clock-face .num12 { top: 40px; left: 50%; transform: translateX(-50%); }
-.clock-face .num6 { bottom: 40px; left: 50%; transform: translateX(-50%); }
-.clock-face .num3 { top: 50%; right: 40px; transform: translateY(-50%); }
-.clock-face .num9 { top: 50%; left: 40px; transform: translateY(-50%); }
-
-.clock-hand {
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 20px; height: 35vw;
-    background: #111;
-    transform-origin: top center;
-    border-radius: 10px;
-    box-shadow: 10px 10px 0 rgba(0,0,0,0.4);
-    animation: tick-tock 60s steps(60) infinite;
-}
-@keyframes tick-tock { 100% { transform: rotate(360deg); } }
+/* --- RELÓGIO REMOVIDO POR ORDEM DO OVERSEER --- */
 
 /* PAINEL ESQUERDO: Botões e Título Reto */
 .menu-left-panel {
@@ -488,8 +446,10 @@ body {
 .char-brawler {
     position: absolute;
     background-size: contain; background-repeat: no-repeat; background-position: bottom;
-    /* Sombras integradas para simular estarem no mesmo "chão" */
+    /* Sombras integradas e forçando renderização 4k High-Quality */
     filter: drop-shadow(8px 10px 0 rgba(0,0,0,0.35)) saturate(1.1);
+    image-rendering: high-quality;
+    image-rendering: -webkit-optimize-contrast;
 }
 
 /* Base Frontal (Os Maiores) */
