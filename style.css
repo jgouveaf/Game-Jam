@@ -577,7 +577,7 @@ body {
     box-shadow: 0 20px 0 #3d2b1f, 0 30px 50px rgba(0,0,0,0.5);
     overflow: hidden;
     padding: 40px;
-    display: flex; 
+    display: flex; /* Ensure children can be positioned relative to this */
 }
 
 /* Caminhos do Mapa (Dashed lines) */
@@ -654,7 +654,7 @@ body {
 }
 
 /* Avatar do Jogador no Mapa */
-.map-player {
+#map-player {
     position: absolute;
     width: 60px;
     height: 80px;

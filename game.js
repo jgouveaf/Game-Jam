@@ -293,6 +293,7 @@ function updateMapAvatar(nodeId) {
     const avatar = document.getElementById('map-player');
     const container = document.querySelector('.map-container');
     
+    // Pegar posição relativa ao container
     const nodeRect = node.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     
@@ -307,6 +308,7 @@ function selectWorld(worldId, nodeId) {
     updateMapAvatar(nodeId);
     playSelectSound();
     
+    // Pequeno delay para "viajar" até o node antes de começar
     setTimeout(() => {
         const eraIdx = ERAS.findIndex(e => e.id === worldId);
         if (eraIdx !== -1) {
@@ -340,6 +342,7 @@ function startActualLevel() {
     updateEraVisuals();
     updateSkillSlots();
     
+    // REVELA O HUD DE GAMEPLAY
     document.getElementById('hud').classList.remove('hidden');
     
     gameState = 'PLAYING';
