@@ -340,45 +340,12 @@ body {
     width: 100vw; height: 100vh;
 }
 
-/* Cenário 2D Estilo Castle Crashers Construído Puramente em CSS! */
+/* Cenário 2D de Guerra - Arte Customizada (Explosões, Detritos, Caos) */
 .scenery-bg {
     position: absolute;
     top: 0; left: 0; width: 100vw; height: 100vh;
     z-index: 0;
-}
-
-.sky-gradient {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 60%;
-    background: linear-gradient(180deg, #ff7b00, #ffcc00);
-}
-
-.css-clouds {
-    position: absolute;
-    top: 50%; width: 200vw; height: 300px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M10,20 Q15,5 25,15 T40,10 T55,15 T70,5 T85,15 T95,20 Z" fill="%23ffffff" opacity="0.6"/></svg>');
-    background-size: 800px;
-    animation: drift 80s linear infinite;
-}
-@keyframes drift { from { transform: translateX(0); } to { transform: translateX(-50vw); } }
-
-.css-mountains {
-    position: absolute;
-    bottom: 20vh; left: 0; width: 100%; height: 50vh;
-    background: linear-gradient(to top right, #3d2b1f 0%, #7d5b40 50%, transparent 50%),
-                linear-gradient(to top left, #2b1d14 0%, #5c422c 50%, transparent 50%);
-    background-size: 50vw 100%;
-    background-position: 0 0, 25vw 0;
-    opacity: 0.8;
-}
-
-.css-ground {
-    position: absolute;
-    bottom: 0; left: 0; width: 100%; height: 25vh;
-    background: #6b8e23;
-    border-top: 15px solid #556b2f;
-    box-shadow: inset 0 20px 40px rgba(0,0,0,0.5);
-    z-index: 2;
+    background: url('assets/warzone_bg.png') center/cover no-repeat;
 }
 
 .vintage-overlay {
@@ -447,28 +414,25 @@ body {
     padding-left: 20px;
 }
 
-.game-logo-cartoon-small { /* Mantivemos a classe do HTML para nao baguncar */
-    font-family: 'Outfit', 'Impact', sans-serif;
-    font-weight: 900;
-    font-size: 6rem;
+.game-logo-cartoon-small {
+    font-family: 'Caveat Brush', cursive; /* A velha conhecida e amada Caveat Brush */
+    font-size: 8rem; /* Pouco maior pra compensar a fonte mais estreita */
     line-height: 0.85;
-    color: #ffd700; /* Amarelo ouro */
+    color: #fff;
     -webkit-text-stroke: 4px #111;
     text-shadow: 10px 10px 0 #111;
     margin-bottom: 3.5rem;
-    letter-spacing: 2px;
-    /* Sem animação, completamente reto/sólido! */
+    /* SEM ANIMAÇÃO BÊBADA (wobbly) E 100% RETA (sem transform: rotate)! */
 }
-.highlight-toon { color: #fff; }
+.highlight-toon { color: #5cd65c; }
 
 .button-stack {
     display: flex; flex-direction: column; gap: 20px;
 }
 
 .toon-btn-stack {
-    font-family: 'Outfit', 'Impact', sans-serif;
-    font-weight: 900;
-    font-size: 2rem;
+    font-family: 'Caveat Brush', cursive;
+    font-size: 3rem; /* Fica maior com essa fonte */
     padding: 1rem 1.5rem;
     color: #fff;
     text-align: center;
@@ -480,7 +444,6 @@ body {
     user-select: none;
     position: relative;
     text-transform: uppercase;
-    letter-spacing: 3px;
 }
 .toon-btn-stack::after {
     content: ''; position: absolute;
