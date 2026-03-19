@@ -524,3 +524,169 @@ body {
 .bg-prehistoric { background: linear-gradient(to bottom, #2b1d14, #0a0604); }
 .bg-mythic { background: radial-gradient(circle at top, #0f2a4a, #020b14); }
 .bg-future { background: linear-gradient(135deg, #090014, #001f2b); }
+
+/* --- OVERWORLD MAP (CUPHEAD STYLE) --- */
+#overworld-map {
+    background: #e2d1b0; /* Cor de pergaminho/papel antigo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: url('https://cdn-icons-png.flaticon.com/32/3233/3233481.png'), auto;
+}
+
+#overworld-map::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.1) 100%),
+        url('https://www.transparenttextures.com/patterns/handmade-paper.png');
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.6;
+}
+
+/* Grão de Filme Retrô */
+.crt-overlay::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 20;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    animation: flicker 0.1s infinite;
+}
+
+@keyframes flicker {
+    0% { opacity: 0.27; }
+    50% { opacity: 0.3; }
+    100% { opacity: 0.28; }
+}
+
+.map-container {
+    position: relative;
+    width: 90%;
+    height: 80%;
+    max-width: 1200px;
+    background: rgba(255, 235, 180, 0.4);
+    border: 8px solid #5a3d2b;
+    border-radius: 40px;
+    box-shadow: 0 20px 0 #3d2b1f, 0 30px 50px rgba(0,0,0,0.5);
+    overflow: hidden;
+    padding: 40px;
+    display: flex; /* Ensure children can be positioned relative to this */
+}
+
+/* Caminhos do Mapa (Dashed lines) */
+.map-path {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Nodes de Mundo */
+.world-node {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 15;
+}
+
+.world-node::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    width: 80px;
+    height: 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.world-node:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.world-icon {
+    font-size: 80px;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+    animation: idle-float 3s ease-in-out infinite;
+}
+
+.world-label {
+    font-family: 'Caveat Brush', cursive;
+    font-size: 24px;
+    color: #3d2b1f;
+    margin-top: 10px;
+    background: rgba(255,255,255,0.8);
+    padding: 5px 15px;
+    border-radius: 10px;
+    border: 3px solid #3d2b1f;
+    text-shadow: 1px 1px 0 white;
+    white-space: nowrap;
+}
+
+@keyframes idle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Posicionamento dos Mundos */
+#node-prehistoric { left: 15%; top: 50%; }
+#node-medieval { left: 45%; top: 20%; }
+#node-future { left: 75%; top: 40%; }
+
+.world-node.locked {
+    filter: grayscale(1) brightness(0.7);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Avatar do Jogador no Mapa */
+.map-avatar {
+    position: absolute;
+    width: 60px;
+    height: 80px;
+    background: #3d2b1f;
+    border: 5px solid #000;
+    border-radius: 15px;
+    z-index: 20;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.map-avatar::before {
+    content: "👀";
+    font-size: 20px;
+}
+
+/* Animação para os Caminhos */
+.prehistoric-path {
+    border-bottom: 8px dashed rgba(61, 43, 31, 0.4);
+    width: 30%;
+    top: 35%;
+    left: 20%;
+    transform: rotate(-35deg);
+}
+
+.medieval-path {
+    border-bottom: 8px dashed rgba(61, 43, 31, 0.4);
+    width: 30%;
+    top: 30%;
+    left: 50%;
+    transform: rotate(35deg);
+}
