@@ -745,7 +745,7 @@ position: absolute;
 
 /* --- OVERWORLD MAP GIGANTE (CUPHEAD STYLE) --- */
 #overworld-map {
-    background: #000;
+    background: #e2d1b0; /* Restore parchment background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -753,86 +753,91 @@ position: absolute;
     cursor: url('https://cdn-icons-png.flaticon.com/32/3233/3233481.png'), auto;
 }
 
-.map-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden; /* Functions as the camera viewport */
-    background: #111; /* Escuro em volta do mapa */
-}
-
-/* O "Tabuleiro" do Mapa AGORA É GIGANTE PARA FAZER PANNING (CAMERA) */
-.cuphead-map-board {
-    position: absolute;
-    top: 0; left: 0;
-    width: 3000px;
-    height: 2000px;
-    /* O mapa se estica perfeitamente sem cortar: */
-    background: url('assets/cuphead_map.jpg') center/100% 100% no-repeat;
-    box-shadow: 0 0 50px rgba(0,0,0,1);
-    /* Transição suave do Panning da Câmera estilo Cuphead! */
-    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Grão de Filme Retrô no Mapa (Filtro) */
-.cuphead-map-board::after {
+/* Filme Retrô */
+#overworld-map::before {
     content: "";
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png');
+    background-image: 
+        radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.15) 100%),
+        url('https://www.transparenttextures.com/patterns/handmade-paper.png');
     pointer-events: none;
-    z-index: 25; /* Acima do jogador e dos nodes, filtro retrô total */
-    opacity: 0.3;
+    z-index: 10;
+    opacity: 0.8;
 }
 
-/* Os "Pontos" do Cuphead: Níveis na estrada */
-.cuphead-dot {
+.map-container {
+    position: relative;
+    width: 95vw;   
+    height: 85vh; 
+    max-width: 1600px;
+    background: rgba(255, 235, 180, 0.2); 
+    border: 12px solid #5a3d2b;
+    border-radius: 60px;
+    box-shadow: 0 25px 0 #3d2b1f, 0 40px 60px rgba(0,0,0,0.6);
+    overflow: hidden;
+    display: block; 
+}
+
+/* DIVISÃO EM 3 ZONAS */
+.map-bg {
     position: absolute;
-    width: 32px;
-    height: 32px;
-    background: #ffe373; /* Amarelo Cuphead */
-    border: 5px solid #3d2b1f; /* Borda grossa redonda */
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-    z-index: 15;
-    box-shadow: 0 4px 0 #3d2b1f, inset 0 -4px 0 rgba(0,0,0,0.2);
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    background: linear-gradient(90deg, 
+        rgba(107, 124, 55, 0.5) 0%, rgba(107, 124, 55, 0.5) 33.333%,
+        rgba(71, 90, 107, 0.5) 33.333%, rgba(71, 90, 107, 0.5) 66.666%,
+        rgba(152, 92, 232, 0.4) 66.666%, rgba(152, 92, 232, 0.4) 100%
+    );
 }
 
-.cuphead-dot:hover {
-    transform: translate(-50%, -50%) scale(1.3);
-    background: #ffffff;
+.map-bg::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 33.333%;
+    width: 33.334%;
+    height: 100%;
+    border-left: 6px dashed #5a3d2b;
+    border-right: 6px dashed #5a3d2b;
+    box-sizing: border-box;
+    opacity: 0.5;
 }
 
-/* Avatar do Jogador no Mapa (Movido por setas do teclado!) */
+/* Avatar do Jogador no Mapa */
 #map-player {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 90px;
     z-index: 20;
-    /* SEM TRANSITION! Movimento contínuo 60fps via requestAnimationFrame */
+    transition: all 0.1s linear; 
     display: block;
     pointer-events: none;
-    transform: translate(-50%, -50%); 
-    transition: transform 0.1s linear; /* Apenas para o espelhamento de direção */
 }
 
-/* O Caçador Agressivo (A imagem JPG do meio) */
+/* O Caçador (PNG Transparente com animação) */
 #map-player::before {
     content: '';
     position: absolute;
-    bottom: 5px; 
+    bottom: -10px; 
     left: 50%;
-    margin-left: -45px; 
-    width: 90px; /* Reduzi levemente */
-    height: 110px;
-    background: url('assets/angry_standing.jpg') center bottom / contain no-repeat;
-    /* MULTIPLY remove os fundos claros (terra) fundindo perfeitamente ele no mapa sem precisar de PNG transparente! */
-    mix-blend-mode: multiply;
-    filter: contrast(1.2); 
+    margin-left: -75px; 
+    width: 150px;
+    height: 180px;
+    background: url('assets/caveman_panting.png') center bottom / contain no-repeat;
+    filter: drop-shadow(0 15px 5px rgba(0,0,0,0.4));
     transform-origin: bottom center;
     animation: map-avatar-idle 0.4s infinite alternate ease-in-out;
+}
+
+/* Estado de caminhada */
+#map-player.walking::before {
+    animation: map-avatar-walk 0.15s infinite alternate ease-in-out;
+}
+
+@keyframes map-avatar-walk {
+    0% { transform: translateY(0) rotate(-3deg) scaleY(1); }
+    100% { transform: translateY(-10px) rotate(3deg) scaleY(0.9); }
 }
 
 @keyframes map-avatar-idle {

@@ -304,9 +304,9 @@ function startGame() {
 }
 
 let mapAvatarObj = {
-    x: 600, // Começa perto da praia inferior esquerda
-    y: 1600,
-    speed: 8,
+    x: 10, // Porcentagem (0-100)
+    y: 80, 
+    speed: 0.8, // Velocidade em %
     facing: 1
 };
 
@@ -317,7 +317,6 @@ function showOverworld() {
     overworldMap.classList.remove('hidden');
     overworldMap.classList.add('active');
     
-    // Inicia o Game Loop exclusivo do Mapa de Exploração Livre
     requestAnimationFrame(overworldMapLoop);
 }
 
@@ -325,8 +324,8 @@ function overworldMapLoop() {
     if (gameState !== 'OVERWORLD') return;
     
     const avatar = document.getElementById('map-player');
-    const board = document.querySelector('.cuphead-map-board');
-    if (!avatar || !board) {
+    const container = document.querySelector('.map-container');
+    if (!avatar || !container) {
         requestAnimationFrame(overworldMapLoop);
         return;
     }
@@ -339,7 +338,6 @@ function overworldMapLoop() {
     if (keys['ArrowLeft'] || keys['a'] || keys['A']) dx -= 1;
     if (keys['ArrowRight'] || keys['d'] || keys['D']) dx += 1;
     
-    // Normalizar velocidade na diagonal pra não correr mais rápido
     if (dx !== 0 && dy !== 0) {
         const length = Math.hypot(dx, dy);
         dx /= length;
@@ -352,29 +350,20 @@ function overworldMapLoop() {
     if (dx > 0) mapAvatarObj.facing = 1;
     else if (dx < 0) mapAvatarObj.facing = -1;
     
-    // Clamp: Evita sair da arte gigante
-    mapAvatarObj.x = Math.max(50, Math.min(board.clientWidth - 50, mapAvatarObj.x));
-    mapAvatarObj.y = Math.max(100, Math.min(board.clientHeight - 50, mapAvatarObj.y));
+    if (dx !== 0 || dy !== 0) {
+        avatar.classList.add('walking');
+    } else {
+        avatar.classList.remove('walking');
+    }
     
-    // Move o jogador via css (Pixels e scale para virar o rosto)
-    avatar.style.left = mapAvatarObj.x + 'px';
-    avatar.style.top = mapAvatarObj.y + 'px';
-    avatar.style.transform = `translate(-50%, -50%) scaleX(${mapAvatarObj.facing})`;
+    // Clamp %
+    mapAvatarObj.x = Math.max(2, Math.min(98, mapAvatarObj.x));
+    mapAvatarObj.y = Math.max(5, Math.min(95, mapAvatarObj.y));
     
-    // Panning da Câmera (Translada o tabuleiro para o jogador ficar no centro da tela!)
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 2;
+    avatar.style.left = mapAvatarObj.x + '%';
+    avatar.style.top = mapAvatarObj.y + '%';
+    avatar.style.transform = `scaleX(${mapAvatarObj.facing})`;
     
-    let shiftX = cx - mapAvatarObj.x;
-    let shiftY = cy - mapAvatarObj.y;
-    
-    // Clamp Câmera: Não mostrar pixels além das bordas (vazio)
-    shiftX = Math.min(0, Math.max(window.innerWidth - board.clientWidth, shiftX));
-    shiftY = Math.min(0, Math.max(window.innerHeight - board.clientHeight, shiftY));
-    
-    board.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
-    
-    // Continua rodando!
     requestAnimationFrame(overworldMapLoop);
 }
 
