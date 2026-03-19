@@ -478,44 +478,21 @@ body {
 
 .char-brawler {
     position: absolute;
-    background-size: contain; background-repeat: no-repeat; background-position: center;
-    /* Sombras integradas e cores saturadas para parte do cartoon */
-    filter: drop-shadow(5px 5px 0 rgba(0,0,0,0.3)) saturate(1.2) contrast(1.1);
+    background-size: contain; background-repeat: no-repeat; background-position: bottom;
+    /* Sombras mais fortes e sólidas na diagonal pra parecer um desenho plano e unificado */
+    filter: drop-shadow(15px 15px 0 rgba(0,0,0,0.3)) saturate(1.3) contrast(1.05);
 }
 
-/* Tamanhos GIGANTES, encavalados e caóticos! Estilo Castle Crashers */
-.caveman { bottom: -5%; right: 10%; width: 420px; height: 420px; transform-origin: bottom center; animation: swing-club 2.5s infinite ease-in-out; z-index: 15; }
-.pharaoh { top: -2%; right: 5%; width: 330px; height: 330px; transform-origin: top center; animation: float-menace 4s infinite alternate; z-index: 14; }
-.cowboy { bottom: -2%; left: -5%; width: 450px; height: 450px; transform-origin: bottom left; animation: shoot-kick 3.2s infinite alternate; z-index: 16; }
-.modern { top: -10%; left: 15%; width: 360px; height: 360px; transform-origin: center; animation: tactical-hover 2.8s infinite alternate; z-index: 12; }
-.spartan { top: 25%; left: 5%; width: 500px; height: 500px; transform-origin: center; animation: rage-jump 2s infinite alternate; z-index: 17; } /* O maior! Pulando pra fente */
-
-@keyframes swing-club {
-    0% { transform: rotate(-8deg); }
-    50% { transform: rotate(10deg) scale(1.05); }
-    100% { transform: rotate(-8deg); }
-}
-
-@keyframes float-menace {
-    0% { transform: translate(0, 0) rotate(5deg); }
-    100% { transform: translate(-20px, 30px) rotate(-5deg); }
-}
-
-@keyframes shoot-kick {
-    0% { transform: rotate(-5deg) scale(1); }
-    100% { transform: rotate(8deg) scale(1.08); }
-}
-
-@keyframes tactical-hover {
-    0% { transform: translateY(0) rotate(12deg); }
-    100% { transform: translateY(-20px) rotate(-2deg); }
-}
-
-@keyframes rage-jump {
-    0% { transform: rotate(-15deg) scale(1.0); }
-    40% { transform: rotate(5deg) scale(1.1) translateY(-20px); }
-    100% { transform: rotate(-5deg) scale(1.05) translateY(10px); }
-}
+/* 
+    POSE DE PÔSTER (TEAM POSE)! 
+    Eles formam uma base sólida à direita, ancorados no "chão" da tela.
+    Nenhuma animação, 100% integrados como arte de fundo!
+*/
+.spartan { bottom: -2%; right: 25%; width: 550px; height: 550px; z-index: 17; transform: rotate(-2deg); } /* Lider, centralizado */
+.cowboy { bottom: 5%; right: 45%; width: 480px; height: 480px; z-index: 16; transform: rotate(4deg); } /* Cobertura lado esquerdo */
+.caveman { bottom: -5%; right: 0%; width: 450px; height: 450px; z-index: 15; transform: scaleX(-1) rotate(-8deg); } /* Cobertura lado direito, invertido pra olhar pro centro */
+.pharaoh { bottom: 35%; right: 8%; width: 400px; height: 400px; z-index: 13; transform: rotate(5deg); } /* Fundo direito */
+.modern { bottom: 30%; right: 35%; width: 380px; height: 380px; z-index: 12; transform: rotate(-3deg); } /* Fundo central-esquerdo */
 
 .menu-content .credits {
     margin-top: 1rem;
