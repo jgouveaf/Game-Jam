@@ -304,9 +304,9 @@ function startGame() {
 }
 
 let mapAvatarObj = {
-    x: 10, // Porcentagem (0-100)
-    y: 80, 
-    speed: 0.8, // Velocidade em %
+    x: 600, // Começa na praia
+    y: 1600,
+    speed: 8,
     facing: 1
 };
 
@@ -324,8 +324,8 @@ function overworldMapLoop() {
     if (gameState !== 'OVERWORLD') return;
     
     const avatar = document.getElementById('map-player');
-    const container = document.querySelector('.map-container');
-    if (!avatar || !container) {
+    const board = document.querySelector('.cuphead-map-board');
+    if (!avatar || !board) {
         requestAnimationFrame(overworldMapLoop);
         return;
     }
@@ -356,13 +356,25 @@ function overworldMapLoop() {
         avatar.classList.remove('walking');
     }
     
-    // Clamp %
-    mapAvatarObj.x = Math.max(2, Math.min(98, mapAvatarObj.x));
-    mapAvatarObj.y = Math.max(5, Math.min(95, mapAvatarObj.y));
+    // Clamp pixels
+    mapAvatarObj.x = Math.max(50, Math.min(board.clientWidth - 50, mapAvatarObj.x));
+    mapAvatarObj.y = Math.max(100, Math.min(board.clientHeight - 50, mapAvatarObj.y));
     
-    avatar.style.left = mapAvatarObj.x + '%';
-    avatar.style.top = mapAvatarObj.y + '%';
-    avatar.style.transform = `scaleX(${mapAvatarObj.facing})`;
+    avatar.style.left = mapAvatarObj.x + 'px';
+    avatar.style.top = mapAvatarObj.y + 'px';
+    avatar.style.transform = `translate(-50%, -50%) scaleX(${mapAvatarObj.facing})`;
+    
+    // Camera Panning
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    
+    let shiftX = cx - mapAvatarObj.x;
+    let shiftY = cy - mapAvatarObj.y;
+    
+    shiftX = Math.min(0, Math.max(window.innerWidth - board.clientWidth, shiftX));
+    shiftY = Math.min(0, Math.max(window.innerHeight - board.clientHeight, shiftY));
+    
+    board.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
     
     requestAnimationFrame(overworldMapLoop);
 }
