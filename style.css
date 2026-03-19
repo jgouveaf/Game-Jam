@@ -276,6 +276,20 @@ body {
     to { transform: scale(1.05); }
 }
 
+.skip-hint {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.3);
+    margin-top: 2rem;
+    letter-spacing: 5px;
+    animation: pulse-op 2s infinite;
+}
+
+@keyframes pulse-op {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.6; }
+}
+
 
 .screen {
     position: absolute;
@@ -408,6 +422,15 @@ body {
     top: 0; left: 0; width: 100%; height: 35%;
     background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent); 
     pointer-events: none;
+}
+
+#play-btn {
+    animation: btn-pulse 2s infinite ease-in-out;
+}
+
+@keyframes btn-pulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.05); filter: brightness(1.2); }
 }
 
 .color-orange { background: #ffaa00; }

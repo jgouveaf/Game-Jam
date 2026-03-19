@@ -67,6 +67,7 @@ let keys = {};
 let score = 0;
 let enemiesDefeated = 0;
 let lastUpdate = 0;
+let splashTimeouts = [];
 
 // --- Initialization ---
 function setup() {
@@ -79,8 +80,25 @@ function setup() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     });
-    window.addEventListener('keydown', (e) => keys[e.code] = true);
+    window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+        if (e.code === 'Enter' && gameState === 'MENU') {
+            startGame();
+        }
+        if (gameState === 'SPLASH') {
+            skipSplash();
+        }
+    });
     window.addEventListener('keyup', (e) => keys[e.code] = false);
+    
+    // Resume AudioContext on any interaction
+    const resumeAudio = () => {
+        if (window.audioCtx && window.audioCtx.state === 'suspended') {
+            window.audioCtx.resume();
+        }
+    };
+    window.addEventListener('click', resumeAudio);
+    window.addEventListener('keydown', resumeAudio);
 
     document.getElementById('play-btn').onclick = startGame;
     document.getElementById('retry-btn').onclick = startGame;
@@ -153,9 +171,10 @@ function processTransparentBrawlers() {
 }
 
 function runSplashSequence() {
+    gameState = 'SPLASH';
     // Atraso inicial curto por seguranca ao carregar
-    setTimeout(() => {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    splashTimeouts.push(setTimeout(() => {
+        window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         // Magia para liberar o audio no primeiro clique solto pela tela sem travar a interface
         document.addEventListener('click', () => {
@@ -239,19 +258,32 @@ function runSplashSequence() {
         }, 3500); // Tempo para o texto Godframe evaporar
     }, 6000); // Tempo segurando The Godframe
 
-    // 3. Fim da splash e Menu Iniciar
-    setTimeout(() => {
+    splashTimeouts.push(setTimeout(() => {
         titleIntro.classList.remove('active'); // Fade out title
         
-        setTimeout(() => {
-            splashScreen.style.opacity = '0';
-            setTimeout(() => {
-                splashScreen.classList.add('hidden');
-                startMenu.classList.remove('hidden');
-                startMenu.classList.add('active');
-            }, 2000);
-        }, 3500);
-    }, 15000); // Title stays for a majestic duration
+        splashTimeouts.push(setTimeout(() => {
+            finishSplash();
+        }, 3500));
+    }, 15000));
+
+    // Permitir pular ao clicar
+    splashScreen.addEventListener('click', skipSplash);
+}
+
+function skipSplash() {
+    if (gameState !== 'SPLASH') return;
+    splashTimeouts.forEach(t => clearTimeout(t));
+    finishSplash();
+}
+
+function finishSplash() {
+    splashScreen.style.opacity = '0';
+    setTimeout(() => {
+        splashScreen.classList.add('hidden');
+        startMenu.classList.remove('hidden');
+        startMenu.classList.add('active');
+        gameState = 'MENU';
+    }, 500);
 }
 
 function startGame() {
