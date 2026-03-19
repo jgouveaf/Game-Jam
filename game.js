@@ -24,23 +24,23 @@ const skillSlots = [document.getElementById('slot-1'), document.getElementById('
 const ERAS = [
     {
         id: 'prehistoric',
-        name: 'PREHISTORIC AGE',
+        name: 'IDADE PRÉ-HISTÓRICA',
         bgColor: '#e2d1b0',
         enemyColor: '#8b4513',
         playerColor: '#3d2b1f',
         boss: 'ALPHA REX'
     },
     {
-        id: 'mythic',
-        name: 'GREEK MYTHOLOGY',
+        id: 'medieval',
+        name: 'IDADE MÉDIA',
         bgColor: '#f2faff',
-        enemyColor: '#ffd700',
-        playerColor: '#ffffff',
-        boss: 'ZEUS'
+        enemyColor: '#7a7a7a',
+        playerColor: '#ff0000',
+        boss: 'THE DARK KNIGHT'
     },
     {
         id: 'future',
-        name: 'YEAR 2100',
+        name: 'MODERNO / FUTURO',
         bgColor: '#03001c',
         enemyColor: '#ff00ff',
         playerColor: '#00f7ff',
@@ -259,17 +259,92 @@ function startGame() {
     enemiesDefeated = 0;
     player.health = 100;
     player.skills = [];
-    updateEraVisuals();
-    updateSkillSlots();
     
     startMenu.classList.add('hidden');
     gameOverScreen.classList.add('hidden');
     
-    // REVELA O HUD DE GAMEPLAY NESSE MOMENTO!
+    showOverworld();
+}
+
+function showOverworld() {
+    gameState = 'OVERWORLD';
+    document.getElementById('hud').classList.add('hidden');
+    const overworldMap = document.getElementById('overworld-map');
+    overworldMap.classList.remove('hidden');
+    overworldMap.classList.add('active');
+    
+    // Posicionar avatar inicialmente no primeiro node
+    updateMapAvatar('node-prehistoric');
+    
+    // Configurar cliques nos nodes
+    document.querySelectorAll('.world-node').forEach(node => {
+        node.onclick = () => {
+            if (!node.classList.contains('locked')) {
+                const worldId = node.getAttribute('data-world');
+                selectWorld(worldId, node.id);
+            }
+        };
+    });
+}
+
+function updateMapAvatar(nodeId) {
+    const node = document.getElementById(nodeId);
+    if (!node) return;
+    const avatar = document.getElementById('map-player');
+    const container = document.querySelector('.map-container');
+    
+    const nodeRect = node.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    
+    const x = nodeRect.left - containerRect.left + (nodeRect.width / 2) - 30;
+    const y = nodeRect.top - containerRect.top + (nodeRect.height / 2) - 40;
+    
+    avatar.style.left = x + 'px';
+    avatar.style.top = y + 'px';
+}
+
+function selectWorld(worldId, nodeId) {
+    updateMapAvatar(nodeId);
+    playSelectSound();
+    
+    setTimeout(() => {
+        const eraIdx = ERAS.findIndex(e => e.id === worldId);
+        if (eraIdx !== -1) {
+            currentEraIndex = eraIdx;
+            startActualLevel();
+        }
+    }, 600);
+}
+
+function playSelectSound() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+    
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+    
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.3);
+}
+
+function startActualLevel() {
+    const overworldMap = document.getElementById('overworld-map');
+    overworldMap.classList.add('hidden');
+    
+    updateEraVisuals();
+    updateSkillSlots();
+    
     document.getElementById('hud').classList.remove('hidden');
     
     gameState = 'PLAYING';
     enemies = [];
+    lastUpdate = performance.now();
     requestAnimationFrame(gameLoop);
 }
 
@@ -448,7 +523,7 @@ function createPopup(x, y, text, color = '#ff3c00') {
 
 // --- Main Loop ---
 function gameLoop(timestamp) {
-    if (gameState !== 'PLAYING' && gameState !== 'TRANSITION') return;
+    if (gameState !== 'PLAYING' && gameState !== 'TRANSITION' && gameState !== 'OVERWORLD') return;
 
     if (gameState === 'PLAYING') {
         const dt = timestamp - lastUpdate;
