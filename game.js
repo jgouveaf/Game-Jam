@@ -106,21 +106,8 @@ function setup() {
     // Remove fundos brancos automaticamente das imagens dos Lutadores
     processTransparentBrawlers();
 
-    // Criar AudioContext SINCRONAMENTE no clique para o navegador reconhecer como gesto válido
-    const prompt = document.getElementById('gesture-prompt');
-    if (prompt) {
-        document.addEventListener('click', function startSequence() {
-            // AudioContext criado aqui, dentro do handler síncrono do clique!
-            window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            prompt.style.opacity = '0';
-            setTimeout(() => {
-                prompt.classList.add('hidden');
-                runSplashSequence();
-            }, 300);
-        }, {once: true});
-    } else {
-        runSplashSequence();
-    }
+    // Iniciar Abertura Automaticamente
+    runSplashSequence();
 }
 
 function processTransparentBrawlers() {
@@ -175,7 +162,6 @@ function processTransparentBrawlers() {
     document.querySelectorAll('.char-brawler').forEach(el => {
         const bg = el.style.backgroundImage;
         if(bg && bg.includes('url(')) {
-            // Extrai a URL ignorando aspas duplas, simples e parenteses
             const url = bg.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
             transparentizeImage(url, (cleanDataUrl) => {
                 el.style.backgroundImage = `url('${cleanDataUrl}')`;
@@ -186,9 +172,14 @@ function processTransparentBrawlers() {
 
 function runSplashSequence() {
     gameState = 'SPLASH';
-    // AudioContext já foi criado no clique (gesto do usuário) — só iniciar música agora
+    // Atraso inicial curto por seguranca ao carregar
     splashTimeouts.push(setTimeout(() => {
-        if (!window.audioCtx) return; // segurança caso não exista
+        window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Liberar audio no primeiro clique
+        document.addEventListener('click', () => {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }, {once: true});
         
         // --- MÚSICA DE SUSPENSE MEDIEVAL (Estilo Castle Crashers) --- //
         const masterGain = audioCtx.createGain();
@@ -282,10 +273,6 @@ function runSplashSequence() {
 function skipSplash() {
     if (gameState !== 'SPLASH') return;
     splashTimeouts.forEach(t => clearTimeout(t));
-    if (window.audioCtx) {
-        window.audioCtx.close();
-        window.audioCtx = null;
-    }
     finishSplash();
 }
 
@@ -299,7 +286,9 @@ function finishSplash() {
     }, 500);
 }
 
+// --- BOTÃO START → abre o mapa do overworld ---
 function startGame() {
+    if (gameState !== 'MENU' && gameState !== 'GAMEOVER') return;
     console.log("Iniciando Jogo...");
     currentEraIndex = 0;
     enemiesDefeated = 0;
@@ -319,8 +308,8 @@ function showOverworld() {
     overworldMap.classList.remove('hidden');
     overworldMap.classList.add('active');
     
-    // Posicionar avatar inicialmente no primeiro node
-    updateMapAvatar('node-prehistoric');
+    // Posicionar avatar inicialmente no primeiro node (com pequeno delay para renderizar)
+    setTimeout(() => updateMapAvatar('node-prehistoric'), 50);
     
     // Configurar cliques nos nodes
     document.querySelectorAll('.world-node').forEach(node => {
@@ -337,7 +326,9 @@ function updateMapAvatar(nodeId) {
     const node = document.getElementById(nodeId);
     if (!node) return;
     const avatar = document.getElementById('map-player');
+    if (!avatar) return;
     const container = document.querySelector('.map-container');
+    if (!container) return;
     
     // Pegar posição relativa ao container
     const nodeRect = node.getBoundingClientRect();
@@ -365,20 +356,22 @@ function selectWorld(worldId, nodeId) {
 }
 
 function playSelectSound() {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
-    
-    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-    
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.3);
+    try {
+        const ac = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ac.createOscillator();
+        const gain = ac.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, ac.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ac.currentTime + 0.1);
+        
+        gain.gain.setValueAtTime(0.2, ac.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ac.currentTime + 0.3);
+        
+        osc.connect(gain).connect(ac.destination);
+        osc.start();
+        osc.stop(ac.currentTime + 0.3);
+    } catch(e) {}
 }
 
 function startActualLevel() {
