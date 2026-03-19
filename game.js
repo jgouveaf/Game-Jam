@@ -235,7 +235,7 @@ function runSplashSequence() {
                 playArp(j, (i * 1.5) + (j * 0.1875)); 
             }
         }
-    }, 100);
+    }, 100));
 
     // 1. Mostrar Godframe (Fade In lento no fundo escuro)
     setTimeout(() => {
@@ -330,8 +330,8 @@ function updateMapAvatar(nodeId) {
     const nodeRect = node.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     
-    const x = nodeRect.left - containerRect.left + (nodeRect.width / 2) - 30;
-    const y = nodeRect.top - containerRect.top + (nodeRect.height / 2) - 40;
+    const x = nodeRect.left - containerRect.left + (nodeRect.width / 2) - 35;
+    const y = nodeRect.top - containerRect.top + (nodeRect.height / 2) - 45;
     
     avatar.style.left = x + 'px';
     avatar.style.top = y + 'px';
