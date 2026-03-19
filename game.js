@@ -106,10 +106,12 @@ function setup() {
     // Remove fundos brancos automaticamente das imagens dos Lutadores
     processTransparentBrawlers();
 
-    // Requisitar gesto do usuário para evitar 81 warnings de AudioContext no Console
+    // Criar AudioContext SINCRONAMENTE no clique para o navegador reconhecer como gesto válido
     const prompt = document.getElementById('gesture-prompt');
     if (prompt) {
         document.addEventListener('click', function startSequence() {
+            // AudioContext criado aqui, dentro do handler síncrono do clique!
+            window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             prompt.style.opacity = '0';
             setTimeout(() => {
                 prompt.classList.add('hidden');
@@ -184,9 +186,9 @@ function processTransparentBrawlers() {
 
 function runSplashSequence() {
     gameState = 'SPLASH';
-    // Atraso inicial curto por seguranca ao carregar
+    // AudioContext já foi criado no clique (gesto do usuário) — só iniciar música agora
     splashTimeouts.push(setTimeout(() => {
-        window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!window.audioCtx) return; // segurança caso não exista
         
         // --- MÚSICA DE SUSPENSE MEDIEVAL (Estilo Castle Crashers) --- //
         const masterGain = audioCtx.createGain();
