@@ -311,7 +311,7 @@ function showOverworld() {
     overworldMap.classList.add('active');
     
     // Posicionar avatar inicialmente no primeiro node (com pequeno delay para renderizar)
-    setTimeout(() => updateMapAvatar('node-prehistoric'), 50);
+    setTimeout(() => updateMapAvatar('node-1'), 50);
     
     // Configurar cliques nos nodes
     document.querySelectorAll('.world-node').forEach(node => {
@@ -329,32 +329,18 @@ function updateMapAvatar(nodeId) {
     if (!node) return;
     const avatar = document.getElementById('map-player');
     if (!avatar) return;
-    const container = document.querySelector('.map-container');
-    if (!container) return;
     
-    // Pegar posição relativa ao container
-    const nodeRect = node.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    
-    const x = nodeRect.left - containerRect.left + (nodeRect.width / 2) - 35;
-    const y = nodeRect.top - containerRect.top + (nodeRect.height / 2) - 45;
-    
-    avatar.style.left = x + 'px';
-    avatar.style.top = y + 'px';
+    // Puxa as coordenadas CSS diretas (%) da bolinha para ser 100% responsivo!
+    avatar.style.left = node.style.left;
+    avatar.style.top = node.style.top;
 }
 
 function selectWorld(worldId, nodeId) {
     updateMapAvatar(nodeId);
     playSelectSound();
     
-    // Pequeno delay para "viajar" até o node antes de começar
-    setTimeout(() => {
-        const eraIdx = ERAS.findIndex(e => e.id === worldId);
-        if (eraIdx !== -1) {
-            currentEraIndex = eraIdx;
-            startActualLevel();
-        }
-    }, 600);
+    // O usuário solicitou "Não faça nenhuma fase ainda, apenas deixe andar!"
+    // Então apenas nos movemos pelo mapa, sem iniciar levels reais.
 }
 
 function playSelectSound() {

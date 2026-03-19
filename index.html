@@ -100,30 +100,30 @@
 
                 <section id="overworld-map" class="screen hidden">
                     <div class="map-container">
-                        <!-- Custom Map Background -->
-                        <div class="map-bg"></div>
+                        <!-- The beautiful new hand-drawn Cuphead map -->
+                        <div class="cuphead-map-board">
                         
-                        <div class="map-path prehistoric-path"></div>
-                        <div class="map-path medieval-path"></div>
-                        <div class="map-path future-path"></div>
-                        
-                        <div class="world-node active" id="node-prehistoric" data-world="prehistoric">
-                            <div class="world-icon">🌋</div>
-                            <div class="world-label">PRÉ-HISTÓRIA</div>
-                        </div>
+                            <!-- The Nodes for Walking (Cuphead dots) -->
+                            <!-- We place them precisely along the dirt path crossing the entire map! -->
+                            
+                            <!-- Start edge (bottom left beach) -->
+                            <div class="world-node cuphead-dot active" id="node-1" data-world="map-walk" style="left: 20%; top: 82%;"></div>
+                            <!-- Right curve towards center -->
+                            <div class="world-node cuphead-dot active" id="node-2" data-world="map-walk" style="left: 31%; top: 78%;"></div>
+                            <!-- Curve near the middle houses -->
+                            <div class="world-node cuphead-dot active" id="node-3" data-world="map-walk" style="left: 39%; top: 64%;"></div>
+                            <!-- Path towards Castle Door -->
+                            <div class="world-node cuphead-dot active" id="node-4" data-world="map-walk" style="left: 48%; top: 58%;"></div>
+                            <!-- Curve crossing the right bridge / fields -->
+                            <div class="world-node cuphead-dot active" id="node-5" data-world="map-walk" style="left: 56%; top: 56%;"></div>
+                            <!-- Up right curve into futuristic city area -->
+                            <div class="world-node cuphead-dot active" id="node-6" data-world="map-walk" style="left: 64%; top: 49%;"></div>
+                            <!-- The final city node -->
+                            <div class="world-node cuphead-dot active" id="node-7" data-world="map-walk" style="left: 77%; top: 48%;"></div>
 
-                        <div class="world-node active" id="node-medieval" data-world="medieval">
-                            <div class="world-icon">🏰</div>
-                            <div class="world-label">IDADE MÉDIA</div>
+                            <!-- O Caçador (Player Avatar) -->
+                            <div id="map-player" class="map-avatar"></div>
                         </div>
-
-                        <div class="world-node active" id="node-future" data-world="future">
-                            <div class="world-icon">🚀</div>
-                            <div class="world-label">FUTURO</div>
-                        </div>
-
-                        <!-- Player Avatar Proxy -->
-                        <div id="map-player" class="map-avatar"></div>
                     </div>
                 </section>
 
@@ -140,6 +140,6 @@
         </div>
     </div>
 
-    <script src="game.js?v=4"></script>
+    <script src="game.js?v=9"></script>
 </body>
 </html>
