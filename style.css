@@ -805,29 +805,32 @@ position: absolute;
     background: #ffffff;
 }
 
-/* Avatar do Jogador no Mapa (Caixa Lógica Ancorada ao Centro do Dot) */
+/* Avatar do Jogador no Mapa (Movido por setas do teclado!) */
 #map-player {
     position: absolute;
     width: 60px;
     height: 60px;
     z-index: 20;
-    transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy Arc ao andar */
+    /* SEM TRANSITION! Movimento contínuo 60fps via requestAnimationFrame */
     display: block;
     pointer-events: none;
-    transform: translate(-50%, -50%); /* game.js deve ser ajustado para usar 0 offset extra, ou cancelaremos lá */
+    transform: translate(-50%, -50%); 
+    transition: transform 0.1s linear; /* Apenas para o espelhamento de direção */
 }
 
-/* O Caçador (Sprite Gerado) */
+/* O Caçador Agressivo (A imagem JPG do meio) */
 #map-player::before {
     content: '';
     position: absolute;
-    bottom: 5px; /* Pés no meio exato da bolinha amarela */
+    bottom: 5px; 
     left: 50%;
-    margin-left: -55px; /* Centralizar os 110px de width */
-    width: 110px;
-    height: 130px;
-    background: url('assets/cavernas_clean.png') center bottom / contain no-repeat;
-    filter: drop-shadow(0 15px 5px rgba(0,0,0,0.5));
+    margin-left: -45px; 
+    width: 90px; /* Reduzi levemente */
+    height: 110px;
+    background: url('assets/angry_standing.jpg') center bottom / contain no-repeat;
+    /* MULTIPLY remove os fundos claros (terra) fundindo perfeitamente ele no mapa sem precisar de PNG transparente! */
+    mix-blend-mode: multiply;
+    filter: contrast(1.2); 
     transform-origin: bottom center;
     animation: map-avatar-idle 0.4s infinite alternate ease-in-out;
 }

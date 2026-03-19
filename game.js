@@ -303,6 +303,13 @@ function startGame() {
     showOverworld();
 }
 
+let mapAvatarObj = {
+    x: 600, // Começa perto da praia inferior esquerda
+    y: 1600,
+    speed: 8,
+    facing: 1
+};
+
 function showOverworld() {
     gameState = 'OVERWORLD';
     document.getElementById('hud').classList.add('hidden');
@@ -310,60 +317,65 @@ function showOverworld() {
     overworldMap.classList.remove('hidden');
     overworldMap.classList.add('active');
     
-    // Posicionar avatar inicialmente no primeiro node (com pequeno delay para renderizar)
-    setTimeout(() => updateMapAvatar('node-1'), 50);
-    
-    // Configurar cliques nos nodes
-    document.querySelectorAll('.world-node').forEach(node => {
-        node.onclick = () => {
-            if (!node.classList.contains('locked')) {
-                const worldId = node.getAttribute('data-world');
-                selectWorld(worldId, node.id);
-            }
-        };
-    });
+    // Inicia o Game Loop exclusivo do Mapa de Exploração Livre
+    requestAnimationFrame(overworldMapLoop);
 }
 
-function updateMapAvatar(nodeId) {
-    const node = document.getElementById(nodeId);
-    if (!node) return;
+function overworldMapLoop() {
+    if (gameState !== 'OVERWORLD') return;
+    
     const avatar = document.getElementById('map-player');
     const board = document.querySelector('.cuphead-map-board');
-    if (!avatar || !board) return;
+    if (!avatar || !board) {
+        requestAnimationFrame(overworldMapLoop);
+        return;
+    }
     
-    // Puxa as coordenadas CSS diretas (%) da bolinha
-    const leftStr = node.style.left;
-    const topStr = node.style.top;
+    let dx = 0;
+    let dy = 0;
     
-    avatar.style.left = leftStr;
-    avatar.style.top = topStr;
+    if (keys['ArrowUp'] || keys['w'] || keys['W']) dy -= 1;
+    if (keys['ArrowDown'] || keys['s'] || keys['S']) dy += 1;
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) dx -= 1;
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) dx += 1;
     
-    // Câmera Panning Cinematográfico: Translada o tabuleiro para focar no player!
-    const leftPercent = parseFloat(leftStr) / 100;
-    const topPercent = parseFloat(topStr) / 100;
+    // Normalizar velocidade na diagonal pra não correr mais rápido
+    if (dx !== 0 && dy !== 0) {
+        const length = Math.hypot(dx, dy);
+        dx /= length;
+        dy /= length;
+    }
     
-    const nodeX = board.clientWidth * leftPercent;
-    const nodeY = board.clientHeight * topPercent;
+    mapAvatarObj.x += dx * mapAvatarObj.speed;
+    mapAvatarObj.y += dy * mapAvatarObj.speed;
     
+    if (dx > 0) mapAvatarObj.facing = 1;
+    else if (dx < 0) mapAvatarObj.facing = -1;
+    
+    // Clamp: Evita sair da arte gigante
+    mapAvatarObj.x = Math.max(50, Math.min(board.clientWidth - 50, mapAvatarObj.x));
+    mapAvatarObj.y = Math.max(100, Math.min(board.clientHeight - 50, mapAvatarObj.y));
+    
+    // Move o jogador via css (Pixels e scale para virar o rosto)
+    avatar.style.left = mapAvatarObj.x + 'px';
+    avatar.style.top = mapAvatarObj.y + 'px';
+    avatar.style.transform = `translate(-50%, -50%) scaleX(${mapAvatarObj.facing})`;
+    
+    // Panning da Câmera (Translada o tabuleiro para o jogador ficar no centro da tela!)
     const cx = window.innerWidth / 2;
     const cy = window.innerHeight / 2;
     
-    let shiftX = cx - nodeX;
-    let shiftY = cy - nodeY;
+    let shiftX = cx - mapAvatarObj.x;
+    let shiftY = cy - mapAvatarObj.y;
     
-    // Clamp: Evita que a câmera mostre um vazio preto (mantém o mapa nos limites da tela)
+    // Clamp Câmera: Não mostrar pixels além das bordas (vazio)
     shiftX = Math.min(0, Math.max(window.innerWidth - board.clientWidth, shiftX));
     shiftY = Math.min(0, Math.max(window.innerHeight - board.clientHeight, shiftY));
     
     board.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
-}
-
-function selectWorld(worldId, nodeId) {
-    updateMapAvatar(nodeId);
-    playSelectSound();
     
-    // O usuário solicitou "Não faça nenhuma fase ainda, apenas deixe andar!"
-    // Então apenas nos movemos pelo mapa, sem iniciar levels reais.
+    // Continua rodando!
+    requestAnimationFrame(overworldMapLoop);
 }
 
 function playSelectSound() {
