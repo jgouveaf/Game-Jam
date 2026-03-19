@@ -106,8 +106,19 @@ function setup() {
     // Remove fundos brancos automaticamente das imagens dos Lutadores
     processTransparentBrawlers();
 
-    // Iniciar Abertura Automaticamente (A pedido do usuario)
-    runSplashSequence();
+    // Requisitar gesto do usuário para evitar 81 warnings de AudioContext no Console
+    const prompt = document.getElementById('gesture-prompt');
+    if (prompt) {
+        document.addEventListener('click', function startSequence() {
+            prompt.style.opacity = '0';
+            setTimeout(() => {
+                prompt.classList.add('hidden');
+                runSplashSequence();
+            }, 300);
+        }, {once: true});
+    } else {
+        runSplashSequence();
+    }
 }
 
 function processTransparentBrawlers() {
@@ -176,11 +187,6 @@ function runSplashSequence() {
     // Atraso inicial curto por seguranca ao carregar
     splashTimeouts.push(setTimeout(() => {
         window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Magia para liberar o audio no primeiro clique solto pela tela sem travar a interface
-        document.addEventListener('click', () => {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-        }, {once: true});
         
         // --- MÚSICA DE SUSPENSE MEDIEVAL (Estilo Castle Crashers) --- //
         const masterGain = audioCtx.createGain();
@@ -274,6 +280,10 @@ function runSplashSequence() {
 function skipSplash() {
     if (gameState !== 'SPLASH') return;
     splashTimeouts.forEach(t => clearTimeout(t));
+    if (window.audioCtx) {
+        window.audioCtx.close();
+        window.audioCtx = null;
+    }
     finishSplash();
 }
 
