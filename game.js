@@ -328,11 +328,34 @@ function updateMapAvatar(nodeId) {
     const node = document.getElementById(nodeId);
     if (!node) return;
     const avatar = document.getElementById('map-player');
-    if (!avatar) return;
+    const board = document.querySelector('.cuphead-map-board');
+    if (!avatar || !board) return;
     
-    // Puxa as coordenadas CSS diretas (%) da bolinha para ser 100% responsivo!
-    avatar.style.left = node.style.left;
-    avatar.style.top = node.style.top;
+    // Puxa as coordenadas CSS diretas (%) da bolinha
+    const leftStr = node.style.left;
+    const topStr = node.style.top;
+    
+    avatar.style.left = leftStr;
+    avatar.style.top = topStr;
+    
+    // Câmera Panning Cinematográfico: Translada o tabuleiro para focar no player!
+    const leftPercent = parseFloat(leftStr) / 100;
+    const topPercent = parseFloat(topStr) / 100;
+    
+    const nodeX = board.clientWidth * leftPercent;
+    const nodeY = board.clientHeight * topPercent;
+    
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    
+    let shiftX = cx - nodeX;
+    let shiftY = cy - nodeY;
+    
+    // Clamp: Evita que a câmera mostre um vazio preto (mantém o mapa nos limites da tela)
+    shiftX = Math.min(0, Math.max(window.innerWidth - board.clientWidth, shiftX));
+    shiftY = Math.min(0, Math.max(window.innerHeight - board.clientHeight, shiftY));
+    
+    board.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
 }
 
 function selectWorld(worldId, nodeId) {
