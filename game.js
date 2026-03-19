@@ -279,6 +279,7 @@ function skipSplash() {
 function finishSplash() {
     splashScreen.style.opacity = '0';
     setTimeout(() => {
+        splashScreen.classList.remove('active');
         splashScreen.classList.add('hidden');
         startMenu.classList.remove('hidden');
         startMenu.classList.add('active');
@@ -288,14 +289,15 @@ function finishSplash() {
 
 // --- BOTÃO START → abre o mapa do overworld ---
 function startGame() {
-    if (gameState !== 'MENU' && gameState !== 'GAMEOVER') return;
     console.log("Iniciando Jogo...");
     currentEraIndex = 0;
     enemiesDefeated = 0;
     player.health = 100;
     player.skills = [];
     
+    startMenu.classList.remove('active');
     startMenu.classList.add('hidden');
+    gameOverScreen.classList.remove('active');
     gameOverScreen.classList.add('hidden');
     
     showOverworld();
@@ -376,6 +378,7 @@ function playSelectSound() {
 
 function startActualLevel() {
     const overworldMap = document.getElementById('overworld-map');
+    overworldMap.classList.remove('active');
     overworldMap.classList.add('hidden');
     
     updateEraVisuals();
