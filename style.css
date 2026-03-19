@@ -798,6 +798,7 @@ position: absolute;
 }
 
 /* Avatar do Jogador no Mapa */
+/* Avatar do Jogador no Mapa (Lógica do Container) */
 #map-player {
     position: absolute;
     width: 60px;
@@ -805,37 +806,44 @@ position: absolute;
     z-index: 20;
     display: block;
     pointer-events: none;
+    /* Move o ponto central do objeto para bater com a âncora */
     transform: translate(-50%, -50%); 
 }
 
-/* O Caçador (PNG Transparente com animação de movimento) */
+/* O Caçador Spritesheet (6 frames horizontais) */
 #map-player::before {
     content: '';
     position: absolute;
     bottom: 5px; 
     left: 50%;
-    margin-left: -50px; 
-    width: 100px;
-    height: 120px;
-    background: url('assets/caveman_panting.png') center bottom / contain no-repeat;
+    margin-left: -60px; /* Ajuste para centralizar o frame de 120px */
+    width: 120px;
+    height: 140px;
+    /* Imagem cortada da spritesheet */
+    background: url('assets/caveman_walk_spritesheet.png') left top no-repeat;
+    background-size: 720px 140px; /* 6 frames de 120px = 720px total */
     filter: drop-shadow(0 15px 5px rgba(0,0,0,0.5));
-    transform-origin: bottom center;
-    animation: map-avatar-idle 0.4s infinite alternate ease-in-out;
+    image-rendering: pixelated; /* Mantém o estilo cartoon nítido */
 }
 
-/* Estado de caminhada */
+/* Idle: Apenas o primeiro frame */
+#map-player:not(.walking)::before {
+    background-position: 0 0;
+}
+
+/* Walking: Animação de Cicatriz (Steps 5 porque são 6 frames) */
 #map-player.walking::before {
-    animation: map-avatar-walk 0.15s infinite alternate ease-in-out;
+    animation: walk-cycle 0.6s steps(6) infinite;
 }
 
-@keyframes map-avatar-walk {
-    0% { transform: translateY(0) rotate(-3deg) scaleY(1); }
-    100% { transform: translateY(-10px) rotate(3deg) scaleY(0.9); }
+@keyframes walk-cycle {
+    from { background-position: 0 0; }
+    to { background-position: -720px 0; }
 }
 
 @keyframes map-avatar-idle {
-    from { transform: scaleY(1) scaleX(1); }
-    to { transform: scaleY(0.95) scaleX(1.05); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.98, 1.02); }
 }
 
 /* Tira o avatar antigo */
