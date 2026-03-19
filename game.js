@@ -162,6 +162,7 @@ function processTransparentBrawlers() {
     document.querySelectorAll('.char-brawler').forEach(el => {
         const bg = el.style.backgroundImage;
         if(bg && bg.includes('url(')) {
+            // Extrai a URL ignorando aspas duplas, simples e parenteses
             const url = bg.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
             transparentizeImage(url, (cleanDataUrl) => {
                 el.style.backgroundImage = `url('${cleanDataUrl}')`;
